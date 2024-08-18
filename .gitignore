@@ -1,0 +1,4 @@
+*.user
+.vs
+build
+msvc_make.bat

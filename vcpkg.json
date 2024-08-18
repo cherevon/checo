@@ -1,0 +1,21 @@
+{
+  "builtin-baseline": "be9eb6694585a8db137872b29fcad3619a5f893a",
+  "dependencies": [
+    {
+      "name": "qtbase",
+      "version>=": "6.7.2"
+    },
+    {
+      "name": "qtmultimedia",
+      "version>=": "6.7.2"
+    },
+    {
+      "name": "qtconnectivity",
+      "version>=": "6.7.2"
+    },
+    {
+      "name": "qtsvg",
+      "version>=": "6.7.2"
+    }
+  ]
+}

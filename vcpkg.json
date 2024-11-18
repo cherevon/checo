@@ -16,6 +16,7 @@
     {
       "name": "qtsvg",
       "version>=": "6.7.2"
-    }
+    },
+    "gtest"
   ]
 }

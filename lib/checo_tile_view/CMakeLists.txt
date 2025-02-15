@@ -32,9 +32,12 @@ add_library(${PROJECT_NAME}
 add_library(checo::ui::tile_view ALIAS ${PROJECT_NAME})
 
 # Project includes
-generate_export_header(${PROJECT_NAME} EXPORT_FILE_NAME "${CMAKE_CURRENT_SOURCE_DIR}/include/${PROJECT_NAME}_export.h")
+set(PROJECT_GENERATED_INCLUDE_DIR "${PROJECT_BINARY_DIR}/include")
+generate_export_header(${PROJECT_NAME} EXPORT_FILE_NAME "${PROJECT_GENERATED_INCLUDE_DIR}/${PROJECT_NAME}_export.h")
+
 target_include_directories(${PROJECT_NAME} 
 	PUBLIC 
+		${PROJECT_GENERATED_INCLUDE_DIR}
 		"include"
 	PRIVATE
 		${CMAKE_CURRENT_BINARY_DIR}

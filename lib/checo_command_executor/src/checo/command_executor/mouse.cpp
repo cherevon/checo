@@ -65,7 +65,7 @@ QByteArray MouseCommandExecutor::toByteArray() const
     QByteArray result;
 
     QDataStream resultStream(&result, QIODevice::WriteOnly);
-    resultStream << mEvent->type() << mEvent->button() << mEvent->pos();
+    resultStream << mEvent->type() << mEvent->button() << mEvent->localPos() << mEvent->globalPos();
 
     return result;
 }
@@ -74,12 +74,13 @@ void MouseCommandExecutor::fromByteArray(const QByteArray &data)
 {
     QEvent::Type eventType;
     Qt::MouseButton eventButton;
-    QPoint eventPos;
+    QPointF localPos;
+    QPoint globalPos;
 
     QDataStream dataStream(data);
-    dataStream >> eventType >> eventButton >> eventPos;
+    dataStream >> eventType >> eventButton >> localPos >> globalPos;
 
-    mEvent = std::make_shared<QMouseEvent>(eventType, eventPos, eventButton, eventButton, Qt::NoModifier);
+    mEvent = std::make_shared<QMouseEvent>(eventType, localPos, globalPos, eventButton, eventButton, Qt::NoModifier);
 }
 
 QString MouseCommandExecutor::toString()

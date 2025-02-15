@@ -8,6 +8,7 @@
       "binaryDir": "${sourceDir}/build/${presetName}",
       "cacheVariables": {
         "BUILD_SHARED_LIBS": true,
+        "CMAKE_COMPILE_WARNING_AS_ERROR": true,
         "CMAKE_CXX_STANDARD": "20",
         "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
       }

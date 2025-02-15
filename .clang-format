@@ -1,6 +1,7 @@
 # Format Style Options - Created with Clang Power Tools
 ---
 BasedOnStyle: LLVM
+
 AlignAfterOpenBracket: DontAlign
 AlignConsecutiveBitFields: Consecutive
 AllowAllArgumentsOnNextLine: false
@@ -8,6 +9,7 @@ AllowShortFunctionsOnASingleLine: None
 BreakBeforeBraces: Allman
 ColumnLimit: 120
 IndentWidth: 4
+PackConstructorInitializers: Never
 PointerAlignment: Right
 TabWidth: 4
 ...

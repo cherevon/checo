@@ -2,14 +2,87 @@
   "version": 2,
   "configurePresets": [
     {
-      "name": "Default",
+      "name": "base",
+      "hidden": true,
       "generator": "Ninja",
-      "binaryDir": "${sourceDir}/build",
+      "binaryDir": "${sourceDir}/build/${presetName}",
       "cacheVariables": {
-        "CMAKE_C_COMPILER": "cl.exe",
-        "CMAKE_CXX_COMPILER": "cl.exe",
-        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
         "BUILD_SHARED_LIBS": true,
+        "CMAKE_CXX_STANDARD": "20",
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+      }
+    },
+    {
+      "name": "base-x86",
+      "hidden": true,
+      "inherits": [ "base" ],
+      "architecture": {
+        "value": "x86",
+        "strategy": "external"
+      },
+      "toolset": {
+        "value": "host=x86",
+        "strategy": "external"
+      }
+    },
+    {
+      "name": "base-x64",
+      "hidden": true,
+      "inherits": [ "base" ],
+      "architecture": {
+        "value": "x64",
+        "strategy": "external"
+      },
+      "toolset": {
+        "value": "host=x64",
+        "strategy": "external"
+      }
+    },
+    {
+      "name": "debug-x86",
+      "inherits": [ "base-x86" ],
+      "displayName": "Debug, 32 bit",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "debug-x64",
+      "inherits": [ "base-x64" ],
+      "displayName": "Debug, 64 bit",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "release-x86",
+      "inherits": [ "base-x86" ],
+      "displayName": "Release, 32 bit",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "release-x64",
+      "inherits": [ "base-x64" ],
+      "displayName": "Release, 64 bit",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+      }
+    },
+    {
+      "name": "test-debug-x86",
+      "inherits": [ "debug-x86" ],
+      "displayName": "Debug, 32 bit (Test)",
+      "cacheVariables": {
+        "CHECO_ENABLE_TESTS": true
+      }
+    },
+    {
+      "name": "test-debug-x64",
+      "inherits": [ "debug-x64" ],
+      "displayName": "Debug, 64 bit (Test)",
+      "cacheVariables": {
         "CHECO_ENABLE_TESTS": true
       }
     }

@@ -68,7 +68,7 @@
       "inherits": [ "base-x64" ],
       "displayName": "Release, 64 bit",
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_BUILD_TYPE": "Release"
       }
     },
     {

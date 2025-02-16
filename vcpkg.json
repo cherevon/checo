@@ -2,9 +2,21 @@
   "builtin-baseline": "a345bbdc68cdfda65603e24413b21afb28f110fb",
   "dependencies": [
     "gtest",
-    "qtbase",
-    "qtconnectivity",
-    "qtmultimedia",
-    "qtsvg"
+    {
+      "name": "qtbase",
+      "version>=": "6.8.0"
+    },
+    {
+      "name": "qtconnectivity",
+      "version>=": "6.8.0"
+    },
+    {
+      "name": "qtmultimedia",
+      "version>=": "6.8.0"
+    },
+    {
+      "name": "qtsvg",
+      "version>=": "6.8.0"
+    }
   ]
 }

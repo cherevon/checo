@@ -17,3 +17,6 @@ add_subdirectory("lib/checo_foreground_app_tracker")
 add_subdirectory("lib/checo_os")
 add_subdirectory("lib/checo_os_ui")
 add_subdirectory("lib/checo_tile_view")
+
+# Add applications listed in this repository
+add_subdirectory("app/rimworld/image_to_plan")

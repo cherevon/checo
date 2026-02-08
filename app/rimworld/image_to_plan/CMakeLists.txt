@@ -28,3 +28,13 @@ target_link_libraries(${PROJECT_NAME}
 		Qt::Gui
 		Qt::Widgets
 )
+
+# Installation
+install(TARGETS ${PROJECT_NAME})
+
+qt_generate_deploy_app_script(
+    TARGET ${PROJECT_NAME}
+    OUTPUT_SCRIPT DEPLOY_SCRIPT
+    NO_UNSUPPORTED_PLATFORM_ERROR
+)
+install(SCRIPT ${DEPLOY_SCRIPT})

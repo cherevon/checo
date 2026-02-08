@@ -1,4 +1,5 @@
 *.user
 .vs
 build
+install
 msvc_make.bat

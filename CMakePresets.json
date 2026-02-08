@@ -1,91 +1,63 @@
 {
-  "version": 2,
+  "version": 5,
+  "include": [
+    "./build/ConanPresets.json"
+  ],
   "configurePresets": [
     {
       "name": "base",
       "hidden": true,
-      "generator": "Ninja",
-      "binaryDir": "${sourceDir}/build/${presetName}",
+      "installDir": "./install",
       "cacheVariables": {
         "BUILD_SHARED_LIBS": true,
-        "CMAKE_COMPILE_WARNING_AS_ERROR": true,
-        "CMAKE_CXX_STANDARD": "20",
-        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+        "CMAKE_COMPILE_WARNING_AS_ERROR": true
       }
     },
     {
-      "name": "base-x86",
-      "hidden": true,
-      "inherits": [ "base" ],
-      "architecture": {
-        "value": "x86",
-        "strategy": "external"
-      },
-      "toolset": {
-        "value": "host=x86",
-        "strategy": "external"
-      }
+      "name": "release",
+      "inherits": [
+        "base",
+        "conan-release"
+      ],
+      "displayName": "Release"
     },
     {
-      "name": "base-x64",
-      "hidden": true,
-      "inherits": [ "base" ],
-      "architecture": {
-        "value": "x64",
-        "strategy": "external"
-      },
-      "toolset": {
-        "value": "host=x64",
-        "strategy": "external"
-      }
+      "name": "debug",
+      "inherits": [
+        "base",
+        "conan-debug"
+      ],
+      "displayName": "Debug"
     },
     {
-      "name": "debug-x86",
-      "inherits": [ "base-x86" ],
-      "displayName": "Debug, 32 bit",
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug"
-      }
-    },
-    {
-      "name": "debug-x64",
-      "inherits": [ "base-x64" ],
-      "displayName": "Debug, 64 bit",
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug"
-      }
-    },
-    {
-      "name": "release-x86",
-      "inherits": [ "base-x86" ],
-      "displayName": "Release, 32 bit",
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Release"
-      }
-    },
-    {
-      "name": "release-x64",
-      "inherits": [ "base-x64" ],
-      "displayName": "Release, 64 bit",
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Release"
-      }
-    },
-    {
-      "name": "test-debug-x86",
-      "inherits": [ "debug-x86" ],
-      "displayName": "Debug, 32 bit (Test)",
+      "name": "test",
+      "inherits": [
+        "debug"
+      ],
+      "displayName": "Test",
       "cacheVariables": {
         "CHECO_ENABLE_TESTS": true
       }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "build-release",
+      "description": "",
+      "displayName": "Build Release",
+      "configurePreset": "release"
     },
     {
-      "name": "test-debug-x64",
-      "inherits": [ "debug-x64" ],
-      "displayName": "Debug, 64 bit (Test)",
-      "cacheVariables": {
-        "CHECO_ENABLE_TESTS": true
-      }
+      "name": "build-debug",
+      "description": "",
+      "displayName": "Build Debug",
+      "configurePreset": "debug"
+    },
+    {
+      "name": "build-test",
+      "description": "",
+      "displayName": "Build Test",
+      "configurePreset": "test"
     }
   ]
 }

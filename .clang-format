@@ -1,5 +1,3 @@
-# Format Style Options - Created with Clang Power Tools
----
 BasedOnStyle: LLVM
 
 AlignAfterOpenBracket: DontAlign
@@ -12,4 +10,5 @@ IndentWidth: 4
 PackConstructorInitializers: Never
 PointerAlignment: Right
 TabWidth: 4
-...
+SortUsingDeclarations: Lexicographic
+SeparateDefinitionBlocks: Always

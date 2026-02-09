@@ -5,6 +5,7 @@ project("rimworld_image_to_plan")
 # Compiler settings
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_COMPILE_WARNING_AS_ERROR ON)
 
 # Find dependencies
 find_package(Qt6 REQUIRED COMPONENTS
@@ -28,13 +29,3 @@ target_link_libraries(${PROJECT_NAME}
 		Qt::Gui
 		Qt::Widgets
 )
-
-# Installation
-install(TARGETS ${PROJECT_NAME})
-
-qt_generate_deploy_app_script(
-    TARGET ${PROJECT_NAME}
-    OUTPUT_SCRIPT DEPLOY_SCRIPT
-    NO_UNSUPPORTED_PLATFORM_ERROR
-)
-install(SCRIPT ${DEPLOY_SCRIPT})

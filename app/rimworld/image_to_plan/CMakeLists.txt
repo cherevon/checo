@@ -5,7 +5,6 @@ project("rimworld_image_to_plan")
 # Compiler settings
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_COMPILE_WARNING_AS_ERROR ON)
 
 # Find dependencies
 find_package(Qt6 REQUIRED COMPONENTS

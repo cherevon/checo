@@ -5,14 +5,13 @@ project("checo")
 # Options
 option(BUILD_SHARED_LIBS "Build using shared libraries" OFF)
 
-# Add libraries and projects listed in this repository
-add_subdirectory("lib/checo_buttons")
-add_subdirectory("lib/checo_command_executor")
-add_subdirectory("lib/checo_dialogs")
-add_subdirectory("lib/checo_foreground_app_tracker")
-add_subdirectory("lib/checo_os")
-add_subdirectory("lib/checo_os_ui")
-add_subdirectory("lib/checo_tile_view")
+# Add libraries listed in this repository
+add_subdirectory("lib/checo_qt")
+add_subdirectory("lib/checo_qt_buttons")
+add_subdirectory("lib/checo_qt_command_executor")
+add_subdirectory("lib/checo_qt_dialogs")
+add_subdirectory("lib/checo_qt_gui")
+add_subdirectory("lib/checo_qt_widgets")
 
 # Add applications listed in this repository
 add_subdirectory("app/minecraft/auto_sell")

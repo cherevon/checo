@@ -6,6 +6,7 @@ project("checo")
 option(BUILD_SHARED_LIBS "Build using shared libraries" OFF)
 
 # Add libraries listed in this repository
+add_subdirectory("lib/checo_logging")
 add_subdirectory("lib/checo_qt")
 add_subdirectory("lib/checo_qt_buttons")
 add_subdirectory("lib/checo_qt_command_executor")

@@ -24,18 +24,40 @@
 
 #pragma once
 
-#include "checo/logging/log.h"
+#include "checo_id_export.h"
 
-namespace checo::logging
+#include <atomic>
+#include <cstdint>
+
+namespace checo::id
 {
 
-class CHECO_LOGGING_EXPORT LogStdOut : public Log
+class CHECO_ID_EXPORT SnowflakeIdGenerator
 {
   public:
-    LogStdOut();
-    ~LogStdOut() override;
+    static constexpr int64_t EPOCH = 1609459200000LL; // 2021-01-01 (ms)
 
-  protected:
-    void doWrite(const Level level, const std::string &message) override;
+    static constexpr int WORKER_ID_BITS = 10;
+    static constexpr int SEQUENCE_BITS = 12;
+
+    static constexpr int64_t MAX_WORKER_ID = (1LL << WORKER_ID_BITS) - 1;
+    static constexpr int64_t SEQUENCE_MASK = (1LL << SEQUENCE_BITS) - 1;
+
+    static constexpr int WORKER_ID_SHIFT = SEQUENCE_BITS;
+    static constexpr int TIMESTAMP_SHIFT = SEQUENCE_BITS + WORKER_ID_BITS;
+
+  public:
+    explicit SnowflakeIdGenerator(std::uint16_t worker_id);
+
+    virtual ~SnowflakeIdGenerator();
+
+  public:
+    int64_t nextId();
+
+  private:
+    const uint16_t m_WorkerId{0};
+    std::atomic_int64_t m_LastTimestamp{0};
+    std::atomic_uint16_t m_Sequence{0};
 };
-} // namespace checo::logging
+
+} // namespace checo::id

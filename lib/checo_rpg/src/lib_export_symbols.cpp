@@ -22,20 +22,13 @@
  * SOFTWARE.
  */
 
-#pragma once
+#include "checo/rpg/ability.h"
+#include "checo/rpg/character.h"
+#include "checo/rpg/currency.h"
+#include "checo/rpg/entity.h"
+#include "checo/rpg/inventory.h"
+#include "checo/rpg/item.h"
+#include "checo/rpg/stat.h"
+#include "checo/rpg/status_effect.h"
 
-#include "checo/logging/log.h"
-
-namespace checo::logging
-{
-
-class CHECO_LOGGING_EXPORT LogStdOut : public Log
-{
-  public:
-    LogStdOut();
-    ~LogStdOut() override;
-
-  protected:
-    void doWrite(const Level level, const std::string &message) override;
-};
-} // namespace checo::logging
+// This file is empty because it is needed for the compiler to generate the correct export symbols for library structs.

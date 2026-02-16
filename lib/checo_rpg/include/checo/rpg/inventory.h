@@ -24,18 +24,36 @@
 
 #pragma once
 
-#include "checo/logging/log.h"
+#include "checo/rpg/currency.h"
+#include "checo/rpg/item.h"
+#include "checo_rpg_export.h"
 
-namespace checo::logging
+#include <cstdint>
+#include <memory>
+#include <vector>
+
+namespace checo::rpg
 {
 
-class CHECO_LOGGING_EXPORT LogStdOut : public Log
+struct CHECO_RPG_EXPORT InventoryItem
 {
   public:
-    LogStdOut();
-    ~LogStdOut() override;
-
-  protected:
-    void doWrite(const Level level, const std::string &message) override;
+    std::shared_ptr<Item> m_Item{};
+    uint32_t m_Count{1};
 };
-} // namespace checo::logging
+
+struct CHECO_RPG_EXPORT InventoryCurrency
+{
+  public:
+    std::shared_ptr<Currency> m_Currency{};
+    uint32_t m_Count{1};
+};
+
+struct CHECO_RPG_EXPORT Inventory
+{
+  public:
+    std::vector<InventoryItem> m_Items{};
+    std::vector<InventoryCurrency> m_Currencies{};
+};
+
+} // namespace checo::rpg

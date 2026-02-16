@@ -24,18 +24,23 @@
 
 #pragma once
 
-#include "checo/logging/log.h"
+#include "checo_rpg_export.h"
 
-namespace checo::logging
+#include <cstdint>
+#include <string>
+
+namespace checo::rpg
 {
 
-class CHECO_LOGGING_EXPORT LogStdOut : public Log
+using UniqueId = int64_t;
+
+struct CHECO_RPG_EXPORT Entity
 {
   public:
-    LogStdOut();
-    ~LogStdOut() override;
-
-  protected:
-    void doWrite(const Level level, const std::string &message) override;
+    UniqueId m_Id{};
+    std::string m_Category{};
+    std::string m_Name{};
+    std::string m_Description{};
 };
-} // namespace checo::logging
+
+} // namespace checo::rpg

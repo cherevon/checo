@@ -24,18 +24,22 @@
 
 #pragma once
 
-#include "checo/logging/log.h"
+#include "checo/rpg/ability.h"
+#include "checo/rpg/entity.h"
+#include "checo/rpg/status_effect.h"
+#include "checo_rpg_export.h"
 
-namespace checo::logging
+#include <memory>
+#include <vector>
+
+namespace checo::rpg
 {
 
-class CHECO_LOGGING_EXPORT LogStdOut : public Log
+struct CHECO_RPG_EXPORT Item : public Entity
 {
   public:
-    LogStdOut();
-    ~LogStdOut() override;
-
-  protected:
-    void doWrite(const Level level, const std::string &message) override;
+    std::vector<std::shared_ptr<Ability>> m_Abilities{};
+    std::vector<std::shared_ptr<StatusEffect>> m_StatusEffects{};
 };
-} // namespace checo::logging
+
+} // namespace checo::rpg

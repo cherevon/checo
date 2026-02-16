@@ -9,8 +9,10 @@
       "hidden": true,
       "installDir": "./install",
       "cacheVariables": {
-        "BUILD_SHARED_LIBS": true,
-        "CMAKE_COMPILE_WARNING_AS_ERROR": true
+        "CMAKE_COMPILE_WARNING_AS_ERROR": true,
+        "CMAKE_CXX_STANDARD": "23",
+        "CMAKE_CXX_STANDARD_REQUIRED": true,
+        "BUILD_SHARED_LIBS": true
       }
     },
     {

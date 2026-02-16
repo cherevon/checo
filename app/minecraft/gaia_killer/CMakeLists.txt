@@ -2,10 +2,6 @@
 
 project("minecraft_gaia_killer")
 
-# Compiler settings
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
 # Project target
 add_executable(${PROJECT_NAME} "main.cpp")
 

@@ -2,10 +2,6 @@ cmake_minimum_required(VERSION 3.27)
 
 project("checo_qt")
 
-# Compiler settings
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
 # Find dependencies
 find_package(Qt6 REQUIRED COMPONENTS Core)
 

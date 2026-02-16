@@ -2,10 +2,6 @@ cmake_minimum_required(VERSION 3.27)
 
 project("rimworld_image_to_plan")
 
-# Compiler settings
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
 # Find dependencies
 find_package(Qt6 REQUIRED COMPONENTS
 	Gui

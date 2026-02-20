@@ -8,3 +8,8 @@ add_library(checo::io ALIAS ${PROJECT_NAME})
 
 # Project includes
 target_include_directories(${PROJECT_NAME} INTERFACE "include")
+
+# Tests
+if (${CHECO_ENABLE_TESTS})
+	add_subdirectory("test")
+endif()

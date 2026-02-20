@@ -12,3 +12,4 @@ PointerAlignment: Right
 TabWidth: 4
 SortUsingDeclarations: Lexicographic
 SeparateDefinitionBlocks: Always
+BreakTemplateDeclarations: Yes

@@ -23,49 +23,47 @@
  */
 
 #include "checo/fundamental_io.h"
-#include "checo/map_io.h"
+#include "checo/sequence_container_io.h"
 
 #include <gtest/gtest.h>
 
-#include <cmath>
-#include <map>
+#include <deque>
+#include <list>
 #include <sstream>
-#include <unordered_map>
+#include <vector>
 
 namespace checo::testing
 {
 
+static constexpr size_t CONTAINER_ITEM_COUNT = 33;
+
 template <typename T>
-class MapContainerFixture : public ::testing::Test
+class SequenceContainerFixture : public ::testing::Test
 {
 };
 
-using MapContainerTypes = ::testing::Types<std::map<int, double>, std::unordered_map<int, double>,
-    std::multimap<int, double>, std::unordered_multimap<int, double>>;
-TYPED_TEST_SUITE(MapContainerFixture, MapContainerTypes);
+using SequenceContainerTypes = ::testing::Types<std::vector<int>, std::list<int>, std::deque<int>>;
+TYPED_TEST_SUITE(SequenceContainerFixture, SequenceContainerTypes);
 
-TYPED_TEST(MapContainerFixture, BinaryReadWrite)
+TYPED_TEST(SequenceContainerFixture, BinaryReadWrite)
 {
-    static constexpr int ITEM_COUNT = 33;
-
     using T = TypeParam;
 
     // Create a container and fill it with test data
     T expectedContainer;
-    for (int i = 0; i < ITEM_COUNT; ++i)
+    for (size_t i = 0; i < CONTAINER_ITEM_COUNT; ++i)
     {
-        expectedContainer.insert({i, std::sqrt(i * i)});
-        expectedContainer.insert({i, std::sqrt(i * i) + 0.5}); // Insert duplicate keys for multimaps
+        expectedContainer.push_back(static_cast<int>(i * i)); // Fill with squares of indices
     }
 
     // Write expected data to the stream
     std::stringstream stream(std::ios::in | std::ios::out | std::ios::binary);
-    checo::writeBinary(stream, expectedContainer, checo::writeBinary<int>, checo::writeBinary<double>);
+    checo::writeBinary(stream, expectedContainer, checo::writeBinary<int>);
 
     // Read data back from the stream
     stream.seekg(0);
     T readContainer{};
-    checo::readBinary(stream, readContainer, checo::readBinary<int>, checo::readBinary<double>);
+    checo::readBinary(stream, readContainer, checo::readBinary<int>);
 
     // Check that the read container matches the expected one
     ASSERT_NE(expectedContainer.size(), 0);

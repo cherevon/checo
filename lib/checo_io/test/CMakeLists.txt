@@ -13,7 +13,8 @@ include(GoogleTest)
 add_executable(${PROJECT_NAME}
 	"src/fundamental_io_tests.cpp"
 	"src/map_io_tests.cpp"
-	"src/push_back_container_io_tests.cpp"
+	"src/sequence_container_io_tests.cpp"
+	"src/set_io_tests.cpp"
 )
 
 # Link dependencies

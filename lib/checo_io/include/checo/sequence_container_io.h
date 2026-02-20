@@ -24,6 +24,8 @@
 
 #pragma once
 
+#include "fundamental_io.h"
+
 #include <functional>
 #include <iostream>
 
@@ -31,18 +33,18 @@ namespace checo
 {
 
 template <typename T>
-concept PushBackContainer = requires(T container, typename T::value_type value) {
+concept SequenceContainer = requires(T container, typename T::value_type value) {
     container.push_back(value);
     container.size();
 };
 
-template <PushBackContainer T>
+template <SequenceContainer T>
 void readBinary(std::istream &inStream, T &container,
     const std::function<void(std::istream &, typename T::value_type &)> &readItemFunc)
 {
     // Read the size of the container first
     decltype(container.size()) size{0};
-    inStream.read(reinterpret_cast<char *>(&size), sizeof(size));
+    checo::readBinary(inStream, size);
 
     // Read each item and push it back into the container
     for (decltype(size) itemNum = 0; itemNum < size; ++itemNum)
@@ -53,13 +55,13 @@ void readBinary(std::istream &inStream, T &container,
     }
 }
 
-template <PushBackContainer T>
+template <SequenceContainer T>
 void writeBinary(std::ostream &outStream, const T &container,
     const std::function<void(std::ostream &, const typename T::value_type &)> &writeItemFunc)
 {
     // Write the size of the container first
     const auto size = container.size();
-    outStream.write(reinterpret_cast<const char *>(&size), sizeof(size));
+    checo::writeBinary(outStream, size);
 
     // Write each item using the provided writeItemFunc for the item type
     for (const auto &item : container)

@@ -66,12 +66,12 @@ TYPED_TEST(FundamentalIoFixture, BinaryReadWrite)
     {
         // Write expected data to the stream
         std::stringstream stream(std::ios::in | std::ios::out | std::ios::binary);
-        writeBinary(stream, expectedData);
+        checo::writeBinary(stream, expectedData);
 
         // Read data back from the stream
         stream.seekg(0);
         T readData{};
-        readBinary(stream, readData);
+        checo::readBinary(stream, readData);
 
         // Check that the read data matches the expected data
         if constexpr (std::is_floating_point_v<T>)

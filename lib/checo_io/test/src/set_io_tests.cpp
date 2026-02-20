@@ -23,47 +23,49 @@
  */
 
 #include "checo/fundamental_io.h"
-#include "checo/push_back_container_io.h"
+#include "checo/set_io.h"
 
 #include <gtest/gtest.h>
 
-#include <deque>
-#include <list>
+#include <cmath>
+#include <set>
 #include <sstream>
-#include <vector>
+#include <unordered_set>
 
 namespace checo::testing
 {
 
 template <typename T>
-class PushBackContainerFixture : public ::testing::Test
+class SetContainerFixture : public ::testing::Test
 {
 };
 
-using PushBackContainerTypes = ::testing::Types<std::vector<int>, std::list<int>, std::deque<int>>;
-TYPED_TEST_SUITE(PushBackContainerFixture, PushBackContainerTypes);
+using SetContainerTypes =
+    ::testing::Types<std::set<int>, std::unordered_set<int>, std::multiset<int>, std::unordered_multiset<int>>;
+TYPED_TEST_SUITE(SetContainerFixture, SetContainerTypes);
 
-TYPED_TEST(PushBackContainerFixture, BinaryReadWrite)
+TYPED_TEST(SetContainerFixture, BinaryReadWrite)
 {
-    static constexpr size_t ITEM_COUNT = 33;
+    static constexpr int ITEM_COUNT = 33;
 
     using T = TypeParam;
 
     // Create a container and fill it with test data
     T expectedContainer;
-    for (size_t i = 0; i < ITEM_COUNT; ++i)
+    for (int i = 0; i < ITEM_COUNT; ++i)
     {
-        expectedContainer.push_back(static_cast<int>(i * i)); // Fill with squares of indices
+        expectedContainer.insert(i);
+        expectedContainer.insert(i); // Insert duplicate keys for multisets
     }
 
     // Write expected data to the stream
     std::stringstream stream(std::ios::in | std::ios::out | std::ios::binary);
-    writeBinary(stream, expectedContainer, writeBinary<int>);
+    checo::writeBinary(stream, expectedContainer, checo::writeBinary<int>);
 
     // Read data back from the stream
     stream.seekg(0);
     T readContainer{};
-    readBinary(stream, readContainer, readBinary<int>);
+    checo::readBinary(stream, readContainer, checo::readBinary<int>);
 
     // Check that the read container matches the expected one
     ASSERT_NE(expectedContainer.size(), 0);

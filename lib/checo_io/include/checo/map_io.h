@@ -31,40 +31,46 @@ namespace checo
 {
 
 template <typename T>
-concept PushBackContainer = requires(T container, typename T::value_type value) {
-    container.push_back(value);
+concept MapContainer = requires(T container, typename T::key_type key, typename T::mapped_type value) {
+    container.emplace(key, value);
     container.size();
 };
 
-template <PushBackContainer T>
+template <MapContainer T>
 void readBinary(std::istream &inStream, T &container,
-    const std::function<void(std::istream &, typename T::value_type &)> &readItemFunc)
+    const std::function<void(std::istream &, typename T::key_type &)> &readKeyFunc,
+    const std::function<void(std::istream &, typename T::mapped_type &)> &readValueFunc)
 {
     // Read the size of the container first
     decltype(container.size()) size{0};
     inStream.read(reinterpret_cast<char *>(&size), sizeof(size));
 
-    // Read each item and push it back into the container
+    // Read each key-value pair from the stream and insert it into the container
     for (decltype(size) itemNum = 0; itemNum < size; ++itemNum)
     {
-        typename T::value_type item;
-        readItemFunc(inStream, item); // Use the provided readItemFunc for the item type
-        container.push_back(item);
+        typename T::key_type key{};
+        typename T::mapped_type value{};
+        readKeyFunc(inStream, key);
+        readValueFunc(inStream, value);
+
+        container.emplace(key, value);
     }
 }
 
-template <PushBackContainer T>
+template <MapContainer T>
 void writeBinary(std::ostream &outStream, const T &container,
-    const std::function<void(std::ostream &, const typename T::value_type &)> &writeItemFunc)
+    const std::function<void(std::ostream &, const typename T::key_type &)> &writeKeyFunc,
+    const std::function<void(std::ostream &, const typename T::mapped_type &)> &writeValueFunc)
 {
     // Write the size of the container first
     const auto size = container.size();
     outStream.write(reinterpret_cast<const char *>(&size), sizeof(size));
 
-    // Write each item using the provided writeItemFunc for the item type
-    for (const auto &item : container)
+    // Write each key-value pair to the stream
+    for (const auto &[key, value] : container)
     {
-        writeItemFunc(outStream, item);
+        writeKeyFunc(outStream, key);
+        writeValueFunc(outStream, value);
     }
 }
 

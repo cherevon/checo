@@ -12,6 +12,7 @@ include(GoogleTest)
 # Project targets
 add_executable(${PROJECT_NAME}
 	"src/fundamental_io_tests.cpp"
+	"src/map_io_tests.cpp"
 	"src/push_back_container_io_tests.cpp"
 )
 

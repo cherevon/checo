@@ -23,47 +23,52 @@
  */
 
 #include "checo/fundamental_io.h"
-#include "checo/push_back_container_io.h"
+#include "checo/map_io.h"
 
 #include <gtest/gtest.h>
 
-#include <deque>
-#include <list>
+#include <cmath>
+#include <map>
 #include <sstream>
-#include <vector>
+#include <unordered_map>
 
 namespace checo::testing
 {
 
 template <typename T>
-class PushBackContainerFixture : public ::testing::Test
+class MapContainerFixture : public ::testing::Test
 {
 };
 
-using PushBackContainerTypes = ::testing::Types<std::vector<int>, std::list<int>, std::deque<int>>;
-TYPED_TEST_SUITE(PushBackContainerFixture, PushBackContainerTypes);
+using MapContainerTypes = ::testing::Types<std::map<int, double>, std::unordered_map<int, double>,
+    std::multimap<int, double>, std::unordered_multimap<int, double>>;
+TYPED_TEST_SUITE(MapContainerFixture, MapContainerTypes);
 
-TYPED_TEST(PushBackContainerFixture, BinaryReadWrite)
+TYPED_TEST(MapContainerFixture, BinaryReadWrite)
 {
-    static constexpr size_t ITEM_COUNT = 33;
+    static constexpr int ITEM_COUNT = 33;
 
     using T = TypeParam;
 
     // Create a container and fill it with test data
     T expectedContainer;
-    for (size_t i = 0; i < ITEM_COUNT; ++i)
+    for (int i = 0; i < ITEM_COUNT; ++i)
     {
-        expectedContainer.push_back(static_cast<int>(i * i)); // Fill with squares of indices
+        expectedContainer.insert({i, std::sqrt(i * i)});
+        expectedContainer.insert({i, std::sqrt(i * i) + 0.5}); // Insert duplicate keys for multimaps
     }
 
     // Write expected data to the stream
     std::stringstream stream(std::ios::in | std::ios::out | std::ios::binary);
-    writeBinary(stream, expectedContainer, writeBinary<int>);
+    const auto writeKeyFunc = static_cast<void (*)(std::ostream &, const int &)>(writeBinary<int>);
+    const auto writeValueFunc = static_cast<void (*)(std::ostream &, const double &)>(writeBinary<double>);
+    writeBinary(stream, expectedContainer, writeKeyFunc, writeValueFunc);
 
     // Read data back from the stream
     stream.seekg(0);
     T readContainer{};
-    readBinary(stream, readContainer, readBinary<int>);
+    readBinary(stream, readContainer, static_cast<void (*)(std::istream &, int &)>(readBinary<int>),
+        static_cast<void (*)(std::istream &, double &)>(readBinary<double>));
 
     // Check that the read container matches the expected one
     ASSERT_NE(expectedContainer.size(), 0);

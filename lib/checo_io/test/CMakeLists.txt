@@ -10,7 +10,10 @@ find_package(GTest REQUIRED)
 include(GoogleTest)
 
 # Project targets
-add_executable(${PROJECT_NAME} "src/fundamental_io_tests.cpp")
+add_executable(${PROJECT_NAME}
+	"src/fundamental_io_tests.cpp"
+	"src/push_back_container_io_tests.cpp"
+)
 
 # Link dependencies
 target_link_libraries(${PROJECT_NAME}

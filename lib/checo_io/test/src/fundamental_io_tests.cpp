@@ -64,13 +64,12 @@ TYPED_TEST(FundamentalIoFixture, BinaryReadWrite)
     // Test writing and reading back each value
     for (T expectedData : testValues)
     {
-        std::stringstream stream(std::ios::in | std::ios::out | std::ios::binary);
-
         // Write expected data to the stream
+        std::stringstream stream(std::ios::in | std::ios::out | std::ios::binary);
         writeBinary(stream, expectedData);
-        stream.seekg(0);
 
         // Read data back from the stream
+        stream.seekg(0);
         T readData{};
         readBinary(stream, readData);
 

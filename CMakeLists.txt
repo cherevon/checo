@@ -21,7 +21,7 @@ add_subdirectory("lib/checo_qt_dialogs")
 add_subdirectory("lib/checo_qt_gui")
 add_subdirectory("lib/checo_qt_widgets")
 add_subdirectory("lib/checo_rpg")
-#add_subdirectory("lib/checo_rpg_io")
+add_subdirectory("lib/checo_rpg_io")
 
 # Add applications listed in this repository
 add_subdirectory("app/minecraft/auto_sell")

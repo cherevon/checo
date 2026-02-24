@@ -24,34 +24,22 @@
 
 #pragma once
 
-#include "checo/rpg/ability.h"
-#include "checo/rpg/entity.h"
-#include "checo/rpg/inventory.h"
-#include "checo/rpg/stat.h"
-#include "checo/rpg/status_effect.h"
-#include "checo_rpg_export.h"
+#include "checo_rpg_io_export.h"
 
-#include <cstdint>
+#include "checo/rpg/item.h"
+
+#include <functional>
+#include <iostream>
 #include <memory>
-#include <vector>
 
 namespace checo::rpg
 {
 
-struct CHECO_RPG_EXPORT CharacterStat
-{
-  public:
-    std::shared_ptr<Stat> m_Stat{};
-    int8_t m_Value{0};
-};
-
-struct CHECO_RPG_EXPORT Character : public Entity
-{
-  public:
-    std::vector<CharacterStat> m_Stats{};
-    std::shared_ptr<Inventory> m_Inventory{};
-    std::vector<std::shared_ptr<Ability>> m_Abilities{};
-    std::vector<std::shared_ptr<StatusEffect>> m_StatusEffects{};
-};
+void CHECO_RPG_IO_EXPORT readBinary(std::istream &inStream, Item &data,
+    const std::function<std::shared_ptr<Ability>(std::istream &)> &readAbilityFunc,
+    const std::function<std::shared_ptr<StatusEffect>(std::istream &)> &readStatusEffectFunc);
+void CHECO_RPG_IO_EXPORT writeBinary(std::ostream &outStream, const Item &data,
+    const std::function<void(std::ostream &, const std::shared_ptr<Ability> &)> &writeAbilityFunc,
+    const std::function<void(std::ostream &, const std::shared_ptr<StatusEffect> &)> &writeStatusEffectFunc);
 
 } // namespace checo::rpg

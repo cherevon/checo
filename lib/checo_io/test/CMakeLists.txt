@@ -26,4 +26,4 @@ target_link_libraries(${PROJECT_NAME}
 )
 
 # Register tests
-gtest_discover_tests(${PROJECT_NAME} PROPERTIES ENVIRONMENT "PATH=${CMAKE_BINARY_DIR};$ENV{PATH}")
+gtest_discover_tests(${PROJECT_NAME})

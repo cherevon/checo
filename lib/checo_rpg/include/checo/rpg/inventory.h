@@ -49,7 +49,7 @@ struct CHECO_RPG_EXPORT InventoryCurrency
     uint32_t m_Count{1};
 };
 
-struct CHECO_RPG_EXPORT Inventory
+struct CHECO_RPG_EXPORT Inventory : public Entity
 {
   public:
     std::vector<InventoryItem> m_Items{};

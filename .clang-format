@@ -4,7 +4,6 @@ AlignAfterOpenBracket: DontAlign
 AlignConsecutiveBitFields: Consecutive
 AllowAllArgumentsOnNextLine: false
 AllowShortFunctionsOnASingleLine: None
-BreakBeforeBraces: Allman
 ColumnLimit: 120
 IndentWidth: 4
 PackConstructorInitializers: Never
@@ -13,3 +12,10 @@ TabWidth: 4
 SortUsingDeclarations: Lexicographic
 SeparateDefinitionBlocks: Always
 BreakTemplateDeclarations: Yes
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterClass: true
+  AfterFunction: true
+  AfterNamespace: true
+  AfterStruct: true
+  AfterUnion: true

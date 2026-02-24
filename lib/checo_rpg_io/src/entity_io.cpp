@@ -22,36 +22,28 @@
  * SOFTWARE.
  */
 
-#pragma once
+#include "checo/rpg/entity_io.h"
 
-#include "checo/rpg/ability.h"
-#include "checo/rpg/entity.h"
-#include "checo/rpg/inventory.h"
-#include "checo/rpg/stat.h"
-#include "checo/rpg/status_effect.h"
-#include "checo_rpg_export.h"
-
-#include <cstdint>
-#include <memory>
-#include <vector>
+#include "checo/fundamental_io.h"
+#include "checo/string_io.h"
 
 namespace checo::rpg
 {
 
-struct CHECO_RPG_EXPORT CharacterStat
+void readBinary(std::istream &inStream, Entity &data)
 {
-  public:
-    std::shared_ptr<Stat> m_Stat{};
-    int8_t m_Value{0};
-};
+    checo::readBinary(inStream, data.m_Id);
+    checo::readBinary(inStream, data.m_Category);
+    checo::readBinary(inStream, data.m_Name);
+    checo::readBinary(inStream, data.m_Description);
+}
 
-struct CHECO_RPG_EXPORT Character : public Entity
+void writeBinary(std::ostream &outStream, const Entity &data)
 {
-  public:
-    std::vector<CharacterStat> m_Stats{};
-    std::shared_ptr<Inventory> m_Inventory{};
-    std::vector<std::shared_ptr<Ability>> m_Abilities{};
-    std::vector<std::shared_ptr<StatusEffect>> m_StatusEffects{};
-};
+    checo::writeBinary(outStream, data.m_Id);
+    checo::writeBinary(outStream, data.m_Category);
+    checo::writeBinary(outStream, data.m_Name);
+    checo::writeBinary(outStream, data.m_Description);
+}
 
 } // namespace checo::rpg

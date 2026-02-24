@@ -24,34 +24,23 @@
 
 #pragma once
 
-#include "checo/rpg/ability.h"
-#include "checo/rpg/entity.h"
-#include "checo/rpg/inventory.h"
-#include "checo/rpg/stat.h"
-#include "checo/rpg/status_effect.h"
-#include "checo_rpg_export.h"
+#include "checo/rpg/entity_io.h"
 
-#include <cstdint>
-#include <memory>
-#include <vector>
+#include "checo/rpg/status_effect.h"
+
+#include <iostream>
 
 namespace checo::rpg
 {
 
-struct CHECO_RPG_EXPORT CharacterStat
+inline void readBinary(std::istream &inStream, StatusEffect &data)
 {
-  public:
-    std::shared_ptr<Stat> m_Stat{};
-    int8_t m_Value{0};
-};
+    readBinary(inStream, static_cast<Entity &>(data));
+}
 
-struct CHECO_RPG_EXPORT Character : public Entity
+inline void writeBinary(std::ostream &outStream, const StatusEffect &data)
 {
-  public:
-    std::vector<CharacterStat> m_Stats{};
-    std::shared_ptr<Inventory> m_Inventory{};
-    std::vector<std::shared_ptr<Ability>> m_Abilities{};
-    std::vector<std::shared_ptr<StatusEffect>> m_StatusEffects{};
-};
+    writeBinary(outStream, static_cast<const Entity &>(data));
+}
 
 } // namespace checo::rpg

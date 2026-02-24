@@ -15,6 +15,7 @@ add_executable(${PROJECT_NAME}
 	"src/map_io_tests.cpp"
 	"src/sequence_container_io_tests.cpp"
 	"src/set_io_tests.cpp"
+	"src/string_io_tests.cpp"
 )
 
 # Link dependencies
@@ -25,4 +26,4 @@ target_link_libraries(${PROJECT_NAME}
 )
 
 # Register tests
-gtest_discover_tests(${PROJECT_NAME})
+gtest_discover_tests(${PROJECT_NAME} PROPERTIES ENVIRONMENT "PATH=${CMAKE_BINARY_DIR};$ENV{PATH}")

@@ -22,53 +22,44 @@
  * SOFTWARE.
  */
 
-#include "checo/fundamental_io.h"
-#include "checo/sequence_container_io.h"
+#include "checo/string_io.h"
 
 #include <gtest/gtest.h>
 
-#include <deque>
-#include <list>
 #include <sstream>
-#include <vector>
 
 namespace checo::testing
 {
 
-template <typename T>
-class SequenceContainerFixture : public ::testing::Test
+class StringIoTest : public ::testing::TestWithParam<std::string>
 {
 };
 
-using SequenceContainerTypes = ::testing::Types<std::vector<int>, std::list<int>, std::deque<int>>;
-TYPED_TEST_SUITE(SequenceContainerFixture, SequenceContainerTypes);
-
-TYPED_TEST(SequenceContainerFixture, BinaryReadWrite)
+TEST_P(StringIoTest, BinaryReadWrite)
 {
-    using T = TypeParam;
+    const std::string expectedString = GetParam();
 
-    static constexpr size_t CONTAINER_ITEM_COUNT = 33;
-
-    // Create a container and fill it with test data
-    T expectedContainer;
-    for (size_t i = 0; i < CONTAINER_ITEM_COUNT; ++i)
-    {
-        expectedContainer.push_back(static_cast<int>(i * i)); // Fill with squares of indices
-    }
-
-    // Write expected data to the stream
+    // Write expected string to a binary stream
     std::stringstream stream(std::ios::in | std::ios::out | std::ios::binary);
-    checo::writeBinary(stream, expectedContainer, checo::writeBinary<int>);
+    checo::writeBinary(stream, expectedString);
 
-    // Read data back from the stream
+    // Read string back from the stream
     stream.seekg(0);
-    T readContainer{};
-    checo::readBinary(stream, readContainer, checo::readBinary<int>);
+    std::string readString;
+    checo::readBinary(stream, readString);
 
-    // Check that the read container matches the expected one
-    ASSERT_NE(expectedContainer.size(), 0);
-    ASSERT_EQ(expectedContainer.size(), readContainer.size());
-    ASSERT_EQ(expectedContainer, readContainer);
+    // Verify that the read string matches the expected one
+    EXPECT_EQ(expectedString, readString);
 }
+
+INSTANTIATE_TEST_SUITE_P(StringCases, StringIoTest,
+    ::testing::Values(std::string{},           // empty
+        std::string{"a"},                      // single char
+        std::string{"hello"},                  // simple ascii
+        std::string{"with spaces inside"},     // spaces
+        std::string{"in \0 the middle", 16},   // embedded nulls
+        std::string{"line1\nline2\n"},         // newlines
+        std::string{"!@#$%^&*()_+-=[]{};':,."} // punctuation
+        ));
 
 } // namespace checo::testing

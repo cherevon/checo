@@ -22,17 +22,31 @@
  * SOFTWARE.
  */
 
-#pragma once
-
-#include "checo_io_export.h"
-
-#include <iostream>
-#include <string>
+#include "checo/string_io.h"
+#include "checo/fundamental_io.h"
 
 namespace checo
 {
 
-CHECO_IO_EXPORT void readBinary(std::istream &inStream, std::string &data);
-CHECO_IO_EXPORT void writeBinary(std::ostream &outStream, const std::string &data);
+void readBinary(std::istream &inStream, std::string &data)
+{
+    // Read the size of the string first
+    std::size_t size{0};
+    checo::readBinary(inStream, size);
+
+    // Read the characters of the string
+    data.resize(size);
+    inStream.read(data.data(), size);
+}
+
+void writeBinary(std::ostream &outStream, const std::string &data)
+{
+    // Write the size of the string first
+    const auto size = data.size();
+    checo::writeBinary(outStream, size);
+
+    // Write the characters of the string
+    outStream.write(data.data(), size);
+}
 
 } // namespace checo

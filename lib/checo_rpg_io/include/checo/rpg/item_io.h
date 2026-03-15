@@ -35,10 +35,10 @@
 namespace checo::rpg
 {
 
-void CHECO_RPG_IO_EXPORT readBinary(std::istream &inStream, Item &data,
+CHECO_RPG_IO_EXPORT void readBinary(std::istream &inStream, Item &data,
     const std::function<std::shared_ptr<Ability>(std::istream &)> &readAbilityFunc,
     const std::function<std::shared_ptr<StatusEffect>(std::istream &)> &readStatusEffectFunc);
-void CHECO_RPG_IO_EXPORT writeBinary(std::ostream &outStream, const Item &data,
+CHECO_RPG_IO_EXPORT void writeBinary(std::ostream &outStream, const Item &data,
     const std::function<void(std::ostream &, const std::shared_ptr<Ability> &)> &writeAbilityFunc,
     const std::function<void(std::ostream &, const std::shared_ptr<StatusEffect> &)> &writeStatusEffectFunc);
 

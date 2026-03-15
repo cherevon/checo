@@ -22,18 +22,41 @@
  * SOFTWARE.
  */
 
-#pragma once
+#include "checo/rpg/ability_io.h"
+#include "checo/rpg/ability_test_support.h"
 
-#include "checo_rpg_io_export.h"
+#include <gtest/gtest.h>
 
-#include "checo/rpg/entity.h"
+#include <sstream>
 
-#include <iostream>
-
-namespace checo::rpg
+namespace checo::rpg::testing
 {
 
-CHECO_RPG_IO_EXPORT void readBinary(std::istream &inStream, Entity &data);
-CHECO_RPG_IO_EXPORT void writeBinary(std::ostream &outStream, const Entity &data);
+class AbilityIoTest : public ::testing::TestWithParam<checo::rpg::Ability>
+{
+};
 
-} // namespace checo::rpg
+TEST_P(AbilityIoTest, BinaryReadWrite)
+{
+    const checo::rpg::Ability expectedAbility = GetParam();
+
+    // Write expected ability to a binary stream
+    std::stringstream stream(std::ios::in | std::ios::out | std::ios::binary);
+    checo::rpg::writeBinary(stream, expectedAbility);
+
+    // Read ability back from the stream
+    stream.seekg(0);
+    checo::rpg::Ability readAbility{};
+    checo::rpg::readBinary(stream, readAbility);
+
+    // Verify that the read ability matches the expected one
+    ASSERT_TRUE(deepEqual(expectedAbility, readAbility));
+}
+
+INSTANTIATE_TEST_SUITE_P(AbilityCases, AbilityIoTest,
+    ::testing::ValuesIn({
+        checo::rpg::Ability{},
+        *checo::rpg::createTestAbility(),
+    }));
+
+} // namespace checo::rpg::testing

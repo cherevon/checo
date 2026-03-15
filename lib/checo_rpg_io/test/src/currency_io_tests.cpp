@@ -22,18 +22,41 @@
  * SOFTWARE.
  */
 
-#pragma once
+#include "checo/rpg/currency_io.h"
+#include "checo/rpg/currency_test_support.h"
 
-#include "checo_rpg_io_export.h"
+#include <gtest/gtest.h>
 
-#include "checo/rpg/entity.h"
+#include <sstream>
 
-#include <iostream>
-
-namespace checo::rpg
+namespace checo::rpg::testing
 {
 
-CHECO_RPG_IO_EXPORT void readBinary(std::istream &inStream, Entity &data);
-CHECO_RPG_IO_EXPORT void writeBinary(std::ostream &outStream, const Entity &data);
+class CurrencyIoTest : public ::testing::TestWithParam<checo::rpg::Currency>
+{
+};
 
-} // namespace checo::rpg
+TEST_P(CurrencyIoTest, BinaryReadWrite)
+{
+    const checo::rpg::Currency expectedCurrency = GetParam();
+
+    // Write expected currency to a binary stream
+    std::stringstream stream(std::ios::in | std::ios::out | std::ios::binary);
+    checo::rpg::writeBinary(stream, expectedCurrency);
+
+    // Read currency back from the stream
+    stream.seekg(0);
+    checo::rpg::Currency readCurrency{};
+    checo::rpg::readBinary(stream, readCurrency);
+
+    // Verify that the read currency matches the expected one
+    ASSERT_TRUE(deepEqual(expectedCurrency, readCurrency));
+}
+
+INSTANTIATE_TEST_SUITE_P(CurrencyCases, CurrencyIoTest,
+    ::testing::ValuesIn({
+        checo::rpg::Currency{},
+        *checo::rpg::createTestCurrency(),
+    }));
+
+} // namespace checo::rpg::testing

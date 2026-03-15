@@ -36,25 +36,27 @@ using AbilityWriter = std::function<void(std::ostream &, const std::shared_ptr<A
 using StatusEffectReader = std::function<std::shared_ptr<StatusEffect>(std::istream &)>;
 using StatusEffectWriter = std::function<void(std::ostream &, const std::shared_ptr<StatusEffect> &)>;
 
-void readBinary(std::istream &inStream, Item &data, AbilityReader readAbilityFunc,
-    StatusEffectReader readStatusEffectFunc)
+void readBinary(std::istream &inStream, Item &data, const AbilityReader &readAbilityFunc,
+    const StatusEffectReader &readStatusEffectFunc)
 {
     // Read entity data
     readBinary(inStream, static_cast<Entity &>(data));
 
     // Read abilities
     checo::readBinary(inStream, data.m_Abilities,
-        [&readAbilityFunc](std::istream &stream, std::shared_ptr<Ability> &ability)
-        { ability = readAbilityFunc(stream); });
+        [&readAbilityFunc](std::istream &stream, std::shared_ptr<Ability> &ability) {
+            ability = readAbilityFunc(stream);
+        });
 
     // Read status effects
     checo::readBinary(inStream, data.m_StatusEffects,
-        [&readStatusEffectFunc](std::istream &stream, std::shared_ptr<StatusEffect> &statusEffect)
-        { statusEffect = readStatusEffectFunc(stream); });
+        [&readStatusEffectFunc](std::istream &stream, std::shared_ptr<StatusEffect> &statusEffect) {
+            statusEffect = readStatusEffectFunc(stream);
+        });
 }
 
-void writeBinary(std::ostream &outStream, const Item &data, AbilityWriter writeFunc,
-    StatusEffectWriter statusEffectWriteFunc)
+void writeBinary(std::ostream &outStream, const Item &data, const AbilityWriter &writeFunc,
+    const StatusEffectWriter &statusEffectWriteFunc)
 {
     // Write entity data
     writeBinary(outStream, static_cast<const Entity &>(data));
@@ -65,8 +67,9 @@ void writeBinary(std::ostream &outStream, const Item &data, AbilityWriter writeF
 
     // Write status effects
     checo::writeBinary(outStream, data.m_StatusEffects,
-        [&statusEffectWriteFunc](std::ostream &stream, const std::shared_ptr<StatusEffect> &statusEffect)
-        { statusEffectWriteFunc(stream, statusEffect); });
+        [&statusEffectWriteFunc](std::ostream &stream, const std::shared_ptr<StatusEffect> &statusEffect) {
+            statusEffectWriteFunc(stream, statusEffect);
+        });
 }
 
 } // namespace checo::rpg

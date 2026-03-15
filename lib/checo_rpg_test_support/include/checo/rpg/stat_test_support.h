@@ -24,16 +24,17 @@
 
 #pragma once
 
-#include "checo_rpg_io_export.h"
+#include "checo_rpg_test_support_export.h"
 
-#include "checo/rpg/entity.h"
+#include "checo/rpg/stat.h"
 
-#include <iostream>
+#include <memory>
 
 namespace checo::rpg
 {
 
-CHECO_RPG_IO_EXPORT void readBinary(std::istream &inStream, Entity &data);
-CHECO_RPG_IO_EXPORT void writeBinary(std::ostream &outStream, const Entity &data);
+CHECO_RPG_TEST_SUPPORT_EXPORT bool deepEqual(const Stat &left, const Stat &right);
+
+CHECO_RPG_TEST_SUPPORT_EXPORT std::shared_ptr<Stat> createTestStat();
 
 } // namespace checo::rpg

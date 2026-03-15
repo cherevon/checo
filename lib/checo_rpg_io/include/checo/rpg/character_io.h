@@ -35,17 +35,17 @@
 namespace checo::rpg
 {
 
-void CHECO_RPG_IO_EXPORT readBinary(std::istream &inStream, CharacterStat &data,
+CHECO_RPG_IO_EXPORT void readBinary(std::istream &inStream, CharacterStat &data,
     const std::function<std::shared_ptr<Stat>(std::istream &)> &readStatFunc);
-void CHECO_RPG_IO_EXPORT writeBinary(std::ostream &outStream, const CharacterStat &data,
+CHECO_RPG_IO_EXPORT void writeBinary(std::ostream &outStream, const CharacterStat &data,
     const std::function<void(std::ostream &, const std::shared_ptr<Stat> &)> &writeStatFunc);
 
-void CHECO_RPG_IO_EXPORT readBinary(std::istream &inStream, Character &data,
+CHECO_RPG_IO_EXPORT void readBinary(std::istream &inStream, Character &data,
     const std::function<std::shared_ptr<Stat>(std::istream &)> &readStatFunc,
     const std::function<std::shared_ptr<Inventory>(std::istream &)> &readInventoryFunc,
     const std::function<std::shared_ptr<Ability>(std::istream &)> &readAbilityFunc,
     const std::function<std::shared_ptr<StatusEffect>(std::istream &)> &readStatusEffectFunc);
-void CHECO_RPG_IO_EXPORT writeBinary(std::ostream &outStream, const Character &data,
+CHECO_RPG_IO_EXPORT void writeBinary(std::ostream &outStream, const Character &data,
     const std::function<void(std::ostream &, const std::shared_ptr<Stat> &)> &writeStatFunc,
     const std::function<void(std::ostream &, const std::shared_ptr<Inventory> &)> &writeInventoryFunc,
     const std::function<void(std::ostream &, const std::shared_ptr<Ability> &)> &writeAbilityFunc,

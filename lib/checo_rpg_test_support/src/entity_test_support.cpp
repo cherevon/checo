@@ -22,18 +22,28 @@
  * SOFTWARE.
  */
 
-#pragma once
-
-#include "checo_rpg_io_export.h"
-
-#include "checo/rpg/entity.h"
-
-#include <iostream>
+#include "checo/rpg/entity_test_support.h"
+#include "test_support.h"
 
 namespace checo::rpg
 {
 
-CHECO_RPG_IO_EXPORT void readBinary(std::istream &inStream, Entity &data);
-CHECO_RPG_IO_EXPORT void writeBinary(std::ostream &outStream, const Entity &data);
+static constexpr const char *ENTITY_TYPE = "Entity";
+
+bool deepEqual(const Entity &left, const Entity &right)
+{
+    return left.m_Id == right.m_Id && left.m_Category == right.m_Category && left.m_Name == right.m_Name &&
+           left.m_Description == right.m_Description;
+}
+
+std::shared_ptr<Entity> createTestEntity()
+{
+    auto result = std::make_shared<Entity>();
+    result->m_Id = getNextTestEntityId();
+    result->m_Category = createTestCategory(ENTITY_TYPE, result->m_Id);
+    result->m_Name = createTestName(ENTITY_TYPE, result->m_Id);
+    result->m_Description = createTestDescription(ENTITY_TYPE, result->m_Id);
+    return result;
+}
 
 } // namespace checo::rpg

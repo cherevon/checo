@@ -22,18 +22,37 @@
  * SOFTWARE.
  */
 
-#pragma once
+#include "test_support.h"
 
-#include "checo_rpg_io_export.h"
-
-#include "checo/rpg/entity.h"
-
-#include <iostream>
+#include <format>
+#include <string>
 
 namespace checo::rpg
 {
 
-CHECO_RPG_IO_EXPORT void readBinary(std::istream &inStream, Entity &data);
-CHECO_RPG_IO_EXPORT void writeBinary(std::ostream &outStream, const Entity &data);
+constexpr const char *FMT_TEST_CATEGORY = "Test {} Category #{}";
+constexpr const char *FMT_TEST_NAME = "Test {} Name #{}";
+constexpr const char *FMT_TEST_DESCRIPTION = "Test {} Description #{}";
+
+UniqueId getNextTestEntityId()
+{
+    static UniqueId nextId = 27022026;
+    return nextId++;
+}
+
+std::string createTestCategory(const char *entityType, const UniqueId &entityId)
+{
+    return std::format(FMT_TEST_CATEGORY, entityType, entityId);
+}
+
+std::string createTestName(const char *entityType, const UniqueId &entityId)
+{
+    return std::format(FMT_TEST_NAME, entityType, entityId);
+}
+
+std::string createTestDescription(const char *entityType, const UniqueId &entityId)
+{
+    return std::format(FMT_TEST_DESCRIPTION, entityType, entityId);
+}
 
 } // namespace checo::rpg

@@ -1,18 +1,21 @@
 cmake_minimum_required(VERSION 3.27)
 
-project("checo_rpg_io")
+project("checo_rpg_test_support")
 
 # Include modules
 include(GenerateExportHeader)
 
 # Project targets
 add_library(${PROJECT_NAME}
-	"src/character_io.cpp"
-	"src/entity_io.cpp"
-	"src/inventory_io.cpp"
-	"src/item_io.cpp"
+    "src/ability_test_support.cpp"
+    "src/currency_test_support.cpp"
+    "src/item_test_support.cpp"
+    "src/stat_test_support.cpp"
+    "src/status_effect_test_support.cpp"
+    "src/entity_test_support.cpp"
+    "src/test_support.cpp"
 )
-add_library(checo::rpg::io ALIAS ${PROJECT_NAME})
+add_library(checo::rpg::test_support ALIAS ${PROJECT_NAME})
 
 # Project includes
 set(PROJECT_GENERATED_INCLUDE_DIR "${PROJECT_BINARY_DIR}/include")
@@ -25,13 +28,4 @@ target_include_directories(${PROJECT_NAME}
 )
 
 # Link dependencies
-target_link_libraries(${PROJECT_NAME}
-	PUBLIC
-		checo::io
-		checo::rpg
-)
-
-# Tests
-if (${CHECO_ENABLE_TESTS})
-	add_subdirectory("test")
-endif()
+target_link_libraries(${PROJECT_NAME} PUBLIC checo::rpg)

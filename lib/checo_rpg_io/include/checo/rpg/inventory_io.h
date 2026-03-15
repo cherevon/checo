@@ -35,20 +35,20 @@
 namespace checo::rpg
 {
 
-void CHECO_RPG_IO_EXPORT readBinary(std::istream &inStream, InventoryItem &data,
+CHECO_RPG_IO_EXPORT void readBinary(std::istream &inStream, InventoryItem &data,
     const std::function<std::shared_ptr<Item>(std::istream &)> &readItemFunc);
-void CHECO_RPG_IO_EXPORT writeBinary(std::ostream &outStream, const InventoryItem &data,
+CHECO_RPG_IO_EXPORT void writeBinary(std::ostream &outStream, const InventoryItem &data,
     const std::function<void(std::ostream &, const std::shared_ptr<Item> &)> &writeItemFunc);
 
-void CHECO_RPG_IO_EXPORT readBinary(std::istream &inStream, InventoryCurrency &data,
+CHECO_RPG_IO_EXPORT void readBinary(std::istream &inStream, InventoryCurrency &data,
     const std::function<std::shared_ptr<Currency>(std::istream &)> &readCurrencyFunc);
-void CHECO_RPG_IO_EXPORT writeBinary(std::ostream &outStream, const InventoryCurrency &data,
+CHECO_RPG_IO_EXPORT void writeBinary(std::ostream &outStream, const InventoryCurrency &data,
     const std::function<void(std::ostream &, const std::shared_ptr<Currency> &)> &writeCurrencyFunc);
 
-void CHECO_RPG_IO_EXPORT readBinary(std::istream &inStream, Inventory &data,
+CHECO_RPG_IO_EXPORT void readBinary(std::istream &inStream, Inventory &data,
     const std::function<std::shared_ptr<Item>(std::istream &)> &readItemFunc,
     const std::function<std::shared_ptr<Currency>(std::istream &)> &readCurrencyFunc);
-void CHECO_RPG_IO_EXPORT writeBinary(std::ostream &outStream, const Inventory &data,
+CHECO_RPG_IO_EXPORT void writeBinary(std::ostream &outStream, const Inventory &data,
     const std::function<void(std::ostream &, const std::shared_ptr<Item> &)> &writeItemFunc,
     const std::function<void(std::ostream &, const std::shared_ptr<Currency> &)> &writeCurrencyFunc);
 

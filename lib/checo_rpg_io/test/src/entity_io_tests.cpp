@@ -22,18 +22,41 @@
  * SOFTWARE.
  */
 
-#pragma once
+#include "checo/rpg/entity_io.h"
+#include "checo/rpg/entity_test_support.h"
 
-#include "checo_rpg_io_export.h"
+#include <gtest/gtest.h>
 
-#include "checo/rpg/entity.h"
+#include <sstream>
 
-#include <iostream>
-
-namespace checo::rpg
+namespace checo::rpg::testing
 {
 
-CHECO_RPG_IO_EXPORT void readBinary(std::istream &inStream, Entity &data);
-CHECO_RPG_IO_EXPORT void writeBinary(std::ostream &outStream, const Entity &data);
+class EntityIoTest : public ::testing::TestWithParam<checo::rpg::Entity>
+{
+};
 
-} // namespace checo::rpg
+TEST_P(EntityIoTest, BinaryReadWrite)
+{
+    const checo::rpg::Entity expectedEntity = GetParam();
+
+    // Write expected entity to a binary stream
+    std::stringstream stream(std::ios::in | std::ios::out | std::ios::binary);
+    checo::rpg::writeBinary(stream, expectedEntity);
+
+    // Read entity back from the stream
+    stream.seekg(0);
+    checo::rpg::Entity readEntity{};
+    checo::rpg::readBinary(stream, readEntity);
+
+    // Verify that the read entity matches the expected one
+    ASSERT_TRUE(deepEqual(expectedEntity, readEntity));
+}
+
+INSTANTIATE_TEST_SUITE_P(EntityCases, EntityIoTest,
+    ::testing::ValuesIn({
+        checo::rpg::Entity{},
+        *checo::rpg::createTestEntity(),
+    }));
+
+} // namespace checo::rpg::testing

@@ -24,16 +24,15 @@
 
 #pragma once
 
-#include "checo_rpg_io_export.h"
-
 #include "checo/rpg/entity.h"
-
-#include <iostream>
 
 namespace checo::rpg
 {
 
-CHECO_RPG_IO_EXPORT void readBinary(std::istream &inStream, Entity &data);
-CHECO_RPG_IO_EXPORT void writeBinary(std::ostream &outStream, const Entity &data);
+UniqueId getNextTestEntityId();
+
+std::string createTestCategory(const char *entityType, const UniqueId &entityId);
+std::string createTestName(const char *entityType, const UniqueId &entityId);
+std::string createTestDescription(const char *entityType, const UniqueId &entityId);
 
 } // namespace checo::rpg

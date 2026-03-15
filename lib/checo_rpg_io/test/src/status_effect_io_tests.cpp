@@ -22,18 +22,41 @@
  * SOFTWARE.
  */
 
-#pragma once
+#include "checo/rpg/status_effect_io.h"
+#include "checo/rpg/status_effect_test_support.h"
 
-#include "checo_rpg_io_export.h"
+#include <gtest/gtest.h>
 
-#include "checo/rpg/entity.h"
+#include <sstream>
 
-#include <iostream>
-
-namespace checo::rpg
+namespace checo::rpg::testing
 {
 
-CHECO_RPG_IO_EXPORT void readBinary(std::istream &inStream, Entity &data);
-CHECO_RPG_IO_EXPORT void writeBinary(std::ostream &outStream, const Entity &data);
+class StatusEffectIoTest : public ::testing::TestWithParam<checo::rpg::StatusEffect>
+{
+};
 
-} // namespace checo::rpg
+TEST_P(StatusEffectIoTest, BinaryReadWrite)
+{
+    const checo::rpg::StatusEffect expectedStatusEffect = GetParam();
+
+    // Write expected status effect to a binary stream
+    std::stringstream stream(std::ios::in | std::ios::out | std::ios::binary);
+    checo::rpg::writeBinary(stream, expectedStatusEffect);
+
+    // Read status effect back from the stream
+    stream.seekg(0);
+    checo::rpg::StatusEffect readStatusEffect{};
+    checo::rpg::readBinary(stream, readStatusEffect);
+
+    // Verify that the read status effect matches the expected one
+    ASSERT_TRUE(deepEqual(expectedStatusEffect, readStatusEffect));
+}
+
+INSTANTIATE_TEST_SUITE_P(StatusEffectCases, StatusEffectIoTest,
+    ::testing::ValuesIn({
+        checo::rpg::StatusEffect{},
+        *checo::rpg::createTestStatusEffect(),
+    }));
+
+} // namespace checo::rpg::testing

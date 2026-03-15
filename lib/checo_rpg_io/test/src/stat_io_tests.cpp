@@ -22,18 +22,41 @@
  * SOFTWARE.
  */
 
-#pragma once
+#include "checo/rpg/stat_io.h"
+#include "checo/rpg/stat_test_support.h"
 
-#include "checo_rpg_io_export.h"
+#include <gtest/gtest.h>
 
-#include "checo/rpg/entity.h"
+#include <sstream>
 
-#include <iostream>
-
-namespace checo::rpg
+namespace checo::rpg::testing
 {
 
-CHECO_RPG_IO_EXPORT void readBinary(std::istream &inStream, Entity &data);
-CHECO_RPG_IO_EXPORT void writeBinary(std::ostream &outStream, const Entity &data);
+class StatIoTest : public ::testing::TestWithParam<checo::rpg::Stat>
+{
+};
 
-} // namespace checo::rpg
+TEST_P(StatIoTest, BinaryReadWrite)
+{
+    const checo::rpg::Stat expectedStat = GetParam();
+
+    // Write expected stat to a binary stream
+    std::stringstream stream(std::ios::in | std::ios::out | std::ios::binary);
+    checo::rpg::writeBinary(stream, expectedStat);
+
+    // Read stat back from the stream
+    stream.seekg(0);
+    checo::rpg::Stat readStat{};
+    checo::rpg::readBinary(stream, readStat);
+
+    // Verify that the read stat matches the expected one
+    ASSERT_TRUE(deepEqual(expectedStat, readStat));
+}
+
+INSTANTIATE_TEST_SUITE_P(StatCases, StatIoTest,
+    ::testing::ValuesIn({
+        checo::rpg::Stat{},
+        *checo::rpg::createTestStat(),
+    }));
+
+} // namespace checo::rpg::testing

@@ -25,22 +25,22 @@
 #pragma once
 
 #include "checo/qt/command_executor.h"
-
-#include <QKeySequence>
-
-#include <vector>
+#include "checo_qt_command_executors_export.h"
 
 namespace checo::qt
 {
 
-/// Command which executes QKeySequence
-class CHECO_QT_COMMAND_EXECUTOR_EXPORT KeySequenceCommandExecutor : public CommandExecutor
+/// Command which executes mouse click event
+class CHECO_QT_COMMAND_EXECUTORS_EXPORT MouseClickCommandExecutor : public CommandExecutor
 {
   public:
-    KeySequenceCommandExecutor();
-    explicit KeySequenceCommandExecutor(const std::vector<Qt::Key> &keys);
+    MouseClickCommandExecutor();
+    explicit MouseClickCommandExecutor(const Qt::MouseButton button);
 
-    ~KeySequenceCommandExecutor() override;
+    ~MouseClickCommandExecutor() override;
+
+  public:
+    Qt::MouseButton button() const;
 
   public:
     void execute() override;
@@ -50,11 +50,8 @@ class CHECO_QT_COMMAND_EXECUTOR_EXPORT KeySequenceCommandExecutor : public Comma
 
     QString toString() override;
 
-  public:
-    const std::vector<Qt::Key> &keySequence() const;
-
   private:
-    std::vector<Qt::Key> m_KeySequence{};
+    Qt::MouseButton m_Button{Qt::LeftButton};
 };
 
 } // namespace checo::qt

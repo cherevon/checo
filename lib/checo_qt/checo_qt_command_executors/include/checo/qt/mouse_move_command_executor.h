@@ -24,7 +24,8 @@
 
 #pragma once
 
-#include "checo_qt_command_executor_export.h"
+#include "checo/qt/command_executor.h"
+#include "checo_qt_command_executors_export.h"
 
 #include <QByteArray>
 #include <QString>
@@ -32,29 +33,31 @@
 namespace checo::qt
 {
 
-/// Command which performs some operation when execute() is called
-class CHECO_QT_COMMAND_EXECUTOR_EXPORT CommandExecutor
+/// Command which executes mouse move event
+class CHECO_QT_COMMAND_EXECUTORS_EXPORT MouseMoveCommandExecutor : public CommandExecutor
 {
   public:
-    CommandExecutor();
-    virtual ~CommandExecutor();
+    enum Direction { Left, Right, Up, Down };
 
   public:
-    /// Execute the command
-    virtual void execute() = 0;
+    MouseMoveCommandExecutor();
+    explicit MouseMoveCommandExecutor(const Direction direction);
 
-    /** Finalize all side effects from command execution (if the command saves state between execute() calls
-     * @remark For example, Alt+Tab command press Alt button in execute() but doesn't release it because Tab can be
-     * pressed more than once
-     */
-    virtual void finishExecution();
+    ~MouseMoveCommandExecutor() override;
 
-    /// Save settings of the command to the binary data
-    virtual QByteArray toByteArray() const = 0;
-    /// Load settings of the command from the binary data
-    virtual void fromByteArray(const QByteArray &data) = 0;
+  public:
+    Direction direction() const;
 
-    virtual QString toString() = 0;
+  public:
+    void execute() override;
+
+    QByteArray toByteArray() const override;
+    void fromByteArray(const QByteArray &data) override;
+
+    QString toString() override;
+
+  private:
+    Direction m_Direction{Left};
 };
 
 } // namespace checo::qt

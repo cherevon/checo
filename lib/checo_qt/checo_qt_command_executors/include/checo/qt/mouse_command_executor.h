@@ -25,31 +25,29 @@
 #pragma once
 
 #include "checo/qt/command_executor.h"
-#include "checo_qt_command_executor_export.h"
+#include "checo_qt_command_executors_export.h"
+
+#include <QMouseEvent>
+
+#include <memory>
 
 namespace checo::qt
 {
 
-/// Toggle window (Alt+Tab) to the next or previous one
-class CHECO_QT_COMMAND_EXECUTOR_EXPORT ToggleWindowCommandExecutor : public CommandExecutor
+/// Command which executes mouse event
+class CHECO_QT_COMMAND_EXECUTORS_EXPORT MouseCommandExecutor : public CommandExecutor
 {
   public:
-    enum Direction
-    {
-        Next,
-        Previous,
-    };
+    MouseCommandExecutor();
+    explicit MouseCommandExecutor(const std::shared_ptr<QMouseEvent> &event);
+
+    ~MouseCommandExecutor() override;
 
   public:
-    explicit ToggleWindowCommandExecutor(const Direction direction = Next);
-    ~ToggleWindowCommandExecutor() override;
-
-  public:
-    Direction direction() const;
+    std::shared_ptr<QMouseEvent> event() const;
 
   public:
     void execute() override;
-    void finishExecution() override;
 
     QByteArray toByteArray() const override;
     void fromByteArray(const QByteArray &data) override;
@@ -57,8 +55,8 @@ class CHECO_QT_COMMAND_EXECUTOR_EXPORT ToggleWindowCommandExecutor : public Comm
     QString toString() override;
 
   private:
-    bool m_IsInitialized{false};
-    Direction m_Direction{Next};
+    /// Event which should be executed
+    std::shared_ptr<QMouseEvent> m_Event{nullptr};
 };
 
 } // namespace checo::qt

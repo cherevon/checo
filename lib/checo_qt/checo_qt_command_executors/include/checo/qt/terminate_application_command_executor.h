@@ -25,7 +25,7 @@
 #pragma once
 
 #include "checo/qt/command_executor.h"
-#include "checo_qt_command_executor_export.h"
+#include "checo_qt_command_executors_export.h"
 
 #include <QFileInfo>
 #include <QString>
@@ -34,7 +34,7 @@ namespace checo::qt
 {
 
 /// Command to terminate running application
-class CHECO_QT_COMMAND_EXECUTOR_EXPORT TerminateApplicationCommandExecutor : public CommandExecutor
+class CHECO_QT_COMMAND_EXECUTORS_EXPORT TerminateApplicationCommandExecutor : public CommandExecutor
 {
   public:
     TerminateApplicationCommandExecutor();

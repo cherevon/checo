@@ -25,26 +25,19 @@
 #pragma once
 
 #include "checo/qt/command_executor.h"
-#include "checo_qt_command_executor_export.h"
-
-#include <QMouseEvent>
-
-#include <memory>
+#include "checo_qt_command_executors_export.h"
 
 namespace checo::qt
 {
 
-/// Command which executes mouse event
-class CHECO_QT_COMMAND_EXECUTOR_EXPORT MouseCommandExecutor : public CommandExecutor
+/// Command which types text when executed
+class CHECO_QT_COMMAND_EXECUTORS_EXPORT TypeTextCommandExecutor : public CommandExecutor
 {
   public:
-    MouseCommandExecutor();
-    explicit MouseCommandExecutor(const std::shared_ptr<QMouseEvent> &event);
+    TypeTextCommandExecutor();
+    explicit TypeTextCommandExecutor(const QString &text);
 
-    ~MouseCommandExecutor() override;
-
-  public:
-    std::shared_ptr<QMouseEvent> event() const;
+    ~TypeTextCommandExecutor() override;
 
   public:
     void execute() override;
@@ -54,9 +47,19 @@ class CHECO_QT_COMMAND_EXECUTOR_EXPORT MouseCommandExecutor : public CommandExec
 
     QString toString() override;
 
+    const QString &text() const
+    {
+        return m_Text;
+    }
+
+    void setText(const QString &newText)
+    {
+        m_Text = newText;
+    }
+
   private:
-    /// Event which should be executed
-    std::shared_ptr<QMouseEvent> m_Event{nullptr};
+    /// Text to type when the command is executed
+    QString m_Text{};
 };
 
 } // namespace checo::qt

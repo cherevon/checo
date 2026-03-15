@@ -25,22 +25,26 @@
 #pragma once
 
 #include "checo/qt/command_executor.h"
-#include "checo_qt_command_executor_export.h"
+#include "checo_qt_command_executors_export.h"
+
+#include <QFileInfo>
+#include <QString>
 
 namespace checo::qt
 {
 
-/// Command which executes mouse click event
-class CHECO_QT_COMMAND_EXECUTOR_EXPORT MouseClickCommandExecutor : public CommandExecutor
+/// Command to launch application
+class CHECO_QT_COMMAND_EXECUTORS_EXPORT StartApplicationCommandExecutor : public CommandExecutor
 {
   public:
-    MouseClickCommandExecutor();
-    explicit MouseClickCommandExecutor(const Qt::MouseButton button);
+    StartApplicationCommandExecutor();
+    explicit StartApplicationCommandExecutor(const QString &displayName, const QFileInfo &executable);
 
-    ~MouseClickCommandExecutor() override;
+    ~StartApplicationCommandExecutor() override;
 
   public:
-    Qt::MouseButton button() const;
+    const QString &displayName() const;
+    const QFileInfo &executable() const;
 
   public:
     void execute() override;
@@ -51,7 +55,8 @@ class CHECO_QT_COMMAND_EXECUTOR_EXPORT MouseClickCommandExecutor : public Comman
     QString toString() override;
 
   private:
-    Qt::MouseButton m_Button{Qt::LeftButton};
+    QString m_DisplayName{};
+    QFileInfo m_Executable{};
 };
 
 } // namespace checo::qt

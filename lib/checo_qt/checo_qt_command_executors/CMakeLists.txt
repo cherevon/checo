@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.27)
 
-project("checo_qt_command_executor")
+project("checo_qt_command_executors")
 
 # Find dependencies
 find_package(Qt6 REQUIRED 
@@ -27,7 +27,7 @@ add_library(${PROJECT_NAME}
 	"src/toggle_window_command_executor.cpp"
 	"src/type_text_command_executor.cpp"
 )
-add_library(checo::qt::command_executor ALIAS ${PROJECT_NAME})
+add_library(checo::qt::command_executors ALIAS ${PROJECT_NAME})
 
 # Project includes
 set(PROJECT_GENERATED_INCLUDE_DIR "${PROJECT_BINARY_DIR}/include")

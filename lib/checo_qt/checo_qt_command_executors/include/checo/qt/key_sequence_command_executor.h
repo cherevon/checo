@@ -25,26 +25,23 @@
 #pragma once
 
 #include "checo/qt/command_executor.h"
-#include "checo_qt_command_executor_export.h"
+#include "checo_qt_command_executors_export.h"
 
-#include <QFileInfo>
-#include <QString>
+#include <QKeySequence>
+
+#include <vector>
 
 namespace checo::qt
 {
 
-/// Command to launch application
-class CHECO_QT_COMMAND_EXECUTOR_EXPORT StartApplicationCommandExecutor : public CommandExecutor
+/// Command which executes QKeySequence
+class CHECO_QT_COMMAND_EXECUTORS_EXPORT KeySequenceCommandExecutor : public CommandExecutor
 {
   public:
-    StartApplicationCommandExecutor();
-    explicit StartApplicationCommandExecutor(const QString &displayName, const QFileInfo &executable);
+    KeySequenceCommandExecutor();
+    explicit KeySequenceCommandExecutor(const std::vector<Qt::Key> &keys);
 
-    ~StartApplicationCommandExecutor() override;
-
-  public:
-    const QString &displayName() const;
-    const QFileInfo &executable() const;
+    ~KeySequenceCommandExecutor() override;
 
   public:
     void execute() override;
@@ -54,9 +51,11 @@ class CHECO_QT_COMMAND_EXECUTOR_EXPORT StartApplicationCommandExecutor : public 
 
     QString toString() override;
 
+  public:
+    const std::vector<Qt::Key> &keySequence() const;
+
   private:
-    QString m_DisplayName{};
-    QFileInfo m_Executable{};
+    std::vector<Qt::Key> m_KeySequence{};
 };
 
 } // namespace checo::qt

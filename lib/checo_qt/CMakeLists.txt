@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.27)
 
-project("checo_qt")
+project("checo_qt_libs")
 
-# Add libraries associated with Qt functionality
+# Add libraries listed in this group
 add_subdirectory("checo_qt")
 add_subdirectory("checo_qt_buttons")
 add_subdirectory("checo_qt_command_executors")

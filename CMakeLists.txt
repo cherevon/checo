@@ -16,12 +16,6 @@ add_subdirectory("lib/checo_io")
 add_subdirectory("lib/checo_logging")
 add_subdirectory("lib/checo_qt")
 add_subdirectory("lib/checo_rpg")
-add_subdirectory("lib/checo_rpg_io")
-
-# Add libraries to support testing
-if (${CHECO_ENABLE_TESTS})
-    add_subdirectory("lib/checo_rpg_test_support")
-endif()
 
 # Add applications listed in this repository
 add_subdirectory("app/minecraft/auto_sell")

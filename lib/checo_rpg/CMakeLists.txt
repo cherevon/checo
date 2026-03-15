@@ -1,22 +1,12 @@
 cmake_minimum_required(VERSION 3.27)
 
-project("checo_rpg")
+project("checo_rpg_libs")
 
-# Include modules
-include(GenerateExportHeader)
+# Add libraries listed in this group
+add_subdirectory("checo_rpg")
+add_subdirectory("checo_rpg_io")
 
-# Project targets
-add_library(${PROJECT_NAME}
-	"src/lib_export_symbols.cpp"
-)
-add_library(checo::rpg ALIAS ${PROJECT_NAME})
-
-# Project includes
-set(PROJECT_GENERATED_INCLUDE_DIR "${PROJECT_BINARY_DIR}/include")
-generate_export_header(${PROJECT_NAME} EXPORT_FILE_NAME "${PROJECT_GENERATED_INCLUDE_DIR}/${PROJECT_NAME}_export.h")
-
-target_include_directories(${PROJECT_NAME}
-	PUBLIC
-		${PROJECT_GENERATED_INCLUDE_DIR}
-		"include"
-)
+# Add libraries to support testing
+if (${CHECO_ENABLE_TESTS})
+    add_subdirectory("checo_rpg_test_support")
+endif()

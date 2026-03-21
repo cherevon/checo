@@ -27,7 +27,7 @@
 #include <format>
 #include <string>
 
-namespace checo::rpg
+namespace checo::rpg::testing
 {
 
 constexpr const char *FMT_TEST_CATEGORY = "Test {} Category #{}";
@@ -55,4 +55,4 @@ std::string createTestDescription(const char *entityType, const UniqueId &entity
     return std::format(FMT_TEST_DESCRIPTION, entityType, entityId);
 }
 
-} // namespace checo::rpg
+} // namespace checo::rpg::testing

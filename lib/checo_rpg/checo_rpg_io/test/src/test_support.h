@@ -22,41 +22,37 @@
  * SOFTWARE.
  */
 
-#include "checo/rpg/ability_io.h"
-#include "checo/rpg/ability_test_support.h"
+#pragma once
 
-#include <gtest/gtest.h>
+#include "checo/rpg/ability.h"
+#include "checo/rpg/currency.h"
+#include "checo/rpg/inventory.h"
+#include "checo/rpg/item.h"
+#include "checo/rpg/stat.h"
+#include "checo/rpg/status_effect.h"
 
-#include <sstream>
+#include <iostream>
+#include <memory>
 
 namespace checo::rpg::testing
 {
 
-class AbilityIoTest : public ::testing::TestWithParam<checo::rpg::Ability>
-{
-};
+std::shared_ptr<Ability> readTestAbility(std::istream &inStream);
+void writeTestAbility(std::ostream &outStream, const std::shared_ptr<Ability> &ability);
 
-TEST_P(AbilityIoTest, BinaryReadWrite)
-{
-    const checo::rpg::Ability expectedAbility = GetParam();
+std::shared_ptr<StatusEffect> readTestStatusEffect(std::istream &inStream);
+void writeTestStatusEffect(std::ostream &outStream, const std::shared_ptr<StatusEffect> &statusEffect);
 
-    // Write expected ability to a binary stream
-    std::stringstream stream(std::ios::in | std::ios::out | std::ios::binary);
-    checo::rpg::writeBinary(stream, expectedAbility);
+std::shared_ptr<Currency> readTestCurrency(std::istream &inStream);
+void writeTestCurrency(std::ostream &outStream, const std::shared_ptr<Currency> &currency);
 
-    // Read ability back from the stream
-    stream.seekg(0);
-    checo::rpg::Ability readAbility{};
-    checo::rpg::readBinary(stream, readAbility);
+std::shared_ptr<Item> readTestItem(std::istream &inStream);
+void writeTestItem(std::ostream &outStream, const std::shared_ptr<Item> &item);
 
-    // Verify that the read ability matches the expected one
-    ASSERT_TRUE(deepEqual(expectedAbility, readAbility));
-}
+std::shared_ptr<Stat> readTestStat(std::istream &inStream);
+void writeTestStat(std::ostream &outStream, const std::shared_ptr<Stat> &stat);
 
-INSTANTIATE_TEST_SUITE_P(AbilityCases, AbilityIoTest,
-    ::testing::ValuesIn({
-        checo::rpg::Ability{},
-        *createTestAbility(12345),
-    }));
+std::shared_ptr<Inventory> readTestInventory(std::istream &inStream);
+void writeTestInventory(std::ostream &outStream, const std::shared_ptr<Inventory> &inventory);
 
 } // namespace checo::rpg::testing

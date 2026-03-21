@@ -22,41 +22,22 @@
  * SOFTWARE.
  */
 
-#include "checo/rpg/ability_io.h"
-#include "checo/rpg/ability_test_support.h"
+#pragma once
 
-#include <gtest/gtest.h>
+#include "checo_rpg_test_support_export.h"
 
-#include <sstream>
+#include "checo/rpg/inventory.h"
+
+#include <memory>
 
 namespace checo::rpg::testing
 {
 
-class AbilityIoTest : public ::testing::TestWithParam<checo::rpg::Ability>
-{
-};
+CHECO_RPG_TEST_SUPPORT_EXPORT bool deepEqual(const Inventory &left, const Inventory &right);
+CHECO_RPG_TEST_SUPPORT_EXPORT bool deepEqual(const InventoryItem &left, const InventoryItem &right);
+CHECO_RPG_TEST_SUPPORT_EXPORT bool deepEqual(const InventoryCurrency &left, const InventoryCurrency &right);
 
-TEST_P(AbilityIoTest, BinaryReadWrite)
-{
-    const checo::rpg::Ability expectedAbility = GetParam();
-
-    // Write expected ability to a binary stream
-    std::stringstream stream(std::ios::in | std::ios::out | std::ios::binary);
-    checo::rpg::writeBinary(stream, expectedAbility);
-
-    // Read ability back from the stream
-    stream.seekg(0);
-    checo::rpg::Ability readAbility{};
-    checo::rpg::readBinary(stream, readAbility);
-
-    // Verify that the read ability matches the expected one
-    ASSERT_TRUE(deepEqual(expectedAbility, readAbility));
-}
-
-INSTANTIATE_TEST_SUITE_P(AbilityCases, AbilityIoTest,
-    ::testing::ValuesIn({
-        checo::rpg::Ability{},
-        *createTestAbility(12345),
-    }));
+CHECO_RPG_TEST_SUPPORT_EXPORT std::shared_ptr<Inventory> createTestInventory(const UniqueId &id,
+    const size_t itemCount = 0, const size_t currencyCount = 0);
 
 } // namespace checo::rpg::testing

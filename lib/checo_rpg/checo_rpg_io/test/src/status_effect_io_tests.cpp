@@ -56,7 +56,7 @@ TEST_P(StatusEffectIoTest, BinaryReadWrite)
 INSTANTIATE_TEST_SUITE_P(StatusEffectCases, StatusEffectIoTest,
     ::testing::ValuesIn({
         checo::rpg::StatusEffect{},
-        *checo::rpg::createTestStatusEffect(),
+        *createTestStatusEffect(12345),
     }));
 
 } // namespace checo::rpg::testing

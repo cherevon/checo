@@ -22,6 +22,8 @@
  * SOFTWARE.
  */
 
+#include "test_support.h"
+
 #include "checo/rpg/ability_io.h"
 #include "checo/rpg/item_io.h"
 #include "checo/rpg/item_test_support.h"
@@ -44,30 +46,12 @@ TEST_P(ItemIoTest, BinaryReadWrite)
 
     // Write expected item to a binary stream
     std::stringstream stream(std::ios::in | std::ios::out | std::ios::binary);
-    checo::rpg::writeBinary(
-        stream, expectedItem,
-        [](std::ostream &stream, const std::shared_ptr<checo::rpg::Ability> &ability) {
-            checo::rpg::writeBinary(stream, *ability);
-        },
-        [](std::ostream &stream, const std::shared_ptr<checo::rpg::StatusEffect> &statusEffect) {
-            checo::rpg::writeBinary(stream, *statusEffect);
-        });
+    checo::rpg::writeBinary(stream, expectedItem, writeTestAbility, writeTestStatusEffect);
 
     // Read item back from the stream
     stream.seekg(0);
     checo::rpg::Item readItem{};
-    checo::rpg::readBinary(
-        stream, readItem,
-        [](std::istream &stream) {
-            auto ability = std::make_shared<checo::rpg::Ability>();
-            checo::rpg::readBinary(stream, *ability);
-            return ability;
-        },
-        [](std::istream &stream) {
-            auto statusEffect = std::make_shared<checo::rpg::StatusEffect>();
-            checo::rpg::readBinary(stream, *statusEffect);
-            return statusEffect;
-        });
+    checo::rpg::readBinary(stream, readItem, readTestAbility, readTestStatusEffect);
 
     // Verify that the read item matches the expected one
     ASSERT_TRUE(deepEqual(expectedItem, readItem));
@@ -76,11 +60,11 @@ TEST_P(ItemIoTest, BinaryReadWrite)
 INSTANTIATE_TEST_SUITE_P(ItemCases, ItemIoTest,
     ::testing::ValuesIn({
         checo::rpg::Item{},
-        *checo::rpg::createTestItem(0, 0),
-        *checo::rpg::createTestItem(2, 3),
-        *checo::rpg::createTestItem(5, 0),
-        *checo::rpg::createTestItem(0, 5),
-        *checo::rpg::createTestItem(10, 10),
+        *createTestItem(12345, 0, 0),
+        *createTestItem(12346, 0, 7),
+        *createTestItem(12347, 7, 0),
+        *createTestItem(12348, 22, 55),
+        *createTestItem(12349, 55, 22),
     }));
 
 } // namespace checo::rpg::testing

@@ -56,7 +56,7 @@ TEST_P(StatIoTest, BinaryReadWrite)
 INSTANTIATE_TEST_SUITE_P(StatCases, StatIoTest,
     ::testing::ValuesIn({
         checo::rpg::Stat{},
-        *checo::rpg::createTestStat(),
+        *createTestStat(12345),
     }));
 
 } // namespace checo::rpg::testing

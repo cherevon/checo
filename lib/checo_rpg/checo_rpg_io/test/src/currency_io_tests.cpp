@@ -56,7 +56,7 @@ TEST_P(CurrencyIoTest, BinaryReadWrite)
 INSTANTIATE_TEST_SUITE_P(CurrencyCases, CurrencyIoTest,
     ::testing::ValuesIn({
         checo::rpg::Currency{},
-        *checo::rpg::createTestCurrency(),
+        *createTestCurrency(12345),
     }));
 
 } // namespace checo::rpg::testing

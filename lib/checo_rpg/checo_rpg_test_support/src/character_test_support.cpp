@@ -22,9 +22,13 @@
  * SOFTWARE.
  */
 
-#include "checo/rpg/item_test_support.h"
+#include "checo/rpg/character_test_support.h"
 #include "checo/rpg/ability_test_support.h"
+#include "checo/rpg/currency_test_support.h"
 #include "checo/rpg/entity_test_support.h"
+#include "checo/rpg/inventory_test_support.h"
+#include "checo/rpg/item_test_support.h"
+#include "checo/rpg/stat_test_support.h"
 #include "checo/rpg/status_effect_test_support.h"
 #include "test_support.h"
 
@@ -33,12 +37,25 @@
 namespace checo::rpg::testing
 {
 
-static constexpr const char *ENTITY_TYPE = "Item";
+static constexpr const char *ENTITY_TYPE = "Character";
 
-bool deepEqual(const Item &left, const Item &right)
+bool deepEqual(const Character &left, const Character &right)
 {
     // Check entity data
     if (!deepEqual(static_cast<const Entity &>(left), static_cast<const Entity &>(right))) {
+        return false;
+    }
+
+    // Check stats
+    if (!std::ranges::equal(left.m_Stats, right.m_Stats, [](const auto &leftStat, const auto &rightStat) {
+            return leftStat.m_Value == rightStat.m_Value && deepEqual(*leftStat.m_Stat, *rightStat.m_Stat);
+        })) {
+        return false;
+    }
+
+    // Check inventory
+    if ((left.m_Inventory && !right.m_Inventory) || (!left.m_Inventory && right.m_Inventory) ||
+        (left.m_Inventory && right.m_Inventory && !deepEqual(*left.m_Inventory, *right.m_Inventory))) {
         return false;
     }
 
@@ -60,14 +77,23 @@ bool deepEqual(const Item &left, const Item &right)
     return true;
 }
 
-std::shared_ptr<Item> createTestItem(const UniqueId &id, const size_t abilityCount, const size_t statusEffectCount)
+std::shared_ptr<Character> createTestCharacter(const UniqueId &id, const size_t statCount, const size_t itemCount,
+    const size_t currencyCount, const size_t abilityCount, const size_t statusEffectCount)
 {
     // Fill entity data
-    auto result = std::make_shared<Item>();
+    auto result = std::make_shared<Character>();
     result->m_Id = id;
     result->m_Category = createTestCategory(ENTITY_TYPE, result->m_Id);
     result->m_Name = createTestName(ENTITY_TYPE, result->m_Id);
     result->m_Description = createTestDescription(ENTITY_TYPE, result->m_Id);
+
+    // Fill stats
+    for (size_t i = 0; i < statCount; ++i) {
+        result->m_Stats.push_back(CharacterStat{.m_Stat = createTestStat(i), .m_Value = static_cast<int8_t>(i)});
+    }
+
+    // Fill inventory
+    result->m_Inventory = createTestInventory(itemCount, currencyCount);
 
     // Fill abilities
     for (size_t i = 0; i < abilityCount; ++i) {
@@ -83,4 +109,4 @@ std::shared_ptr<Item> createTestItem(const UniqueId &id, const size_t abilityCou
     return result;
 }
 
-} // namespace checo::rpg
+} // namespace checo::rpg::testing

@@ -30,11 +30,11 @@
 
 #include <memory>
 
-namespace checo::rpg
+namespace checo::rpg::testing
 {
 
 CHECO_RPG_TEST_SUPPORT_EXPORT bool deepEqual(const Currency &left, const Currency &right);
 
-CHECO_RPG_TEST_SUPPORT_EXPORT std::shared_ptr<Currency> createTestCurrency();
+CHECO_RPG_TEST_SUPPORT_EXPORT std::shared_ptr<Currency> createTestCurrency(const UniqueId &id);
 
-} // namespace checo::rpg
+} // namespace checo::rpg::testing

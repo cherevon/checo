@@ -22,8 +22,10 @@
  * SOFTWARE.
  */
 
-#include "checo/rpg/ability_io.h"
-#include "checo/rpg/ability_test_support.h"
+#include "test_support.h"
+
+#include "checo/rpg/inventory_io.h"
+#include "checo/rpg/inventory_test_support.h"
 
 #include <gtest/gtest.h>
 
@@ -32,31 +34,35 @@
 namespace checo::rpg::testing
 {
 
-class AbilityIoTest : public ::testing::TestWithParam<checo::rpg::Ability>
+class InventoryIoTest : public ::testing::TestWithParam<checo::rpg::Inventory>
 {
 };
 
-TEST_P(AbilityIoTest, BinaryReadWrite)
+TEST_P(InventoryIoTest, BinaryReadWrite)
 {
-    const checo::rpg::Ability expectedAbility = GetParam();
+    const checo::rpg::Inventory expectedInventory = GetParam();
 
-    // Write expected ability to a binary stream
+    // Write expected inventory to a binary stream
     std::stringstream stream(std::ios::in | std::ios::out | std::ios::binary);
-    checo::rpg::writeBinary(stream, expectedAbility);
+    checo::rpg::writeBinary(stream, expectedInventory, writeTestItem, writeTestCurrency);
 
-    // Read ability back from the stream
+    // Read inventory back from the stream
     stream.seekg(0);
-    checo::rpg::Ability readAbility{};
-    checo::rpg::readBinary(stream, readAbility);
+    checo::rpg::Inventory readInventory{};
+    checo::rpg::readBinary(stream, readInventory, readTestItem, readTestCurrency);
 
-    // Verify that the read ability matches the expected one
-    ASSERT_TRUE(deepEqual(expectedAbility, readAbility));
+    // Verify that the read inventory matches the expected one
+    ASSERT_TRUE(deepEqual(expectedInventory, readInventory));
 }
 
-INSTANTIATE_TEST_SUITE_P(AbilityCases, AbilityIoTest,
+INSTANTIATE_TEST_SUITE_P(InventoryCases, InventoryIoTest,
     ::testing::ValuesIn({
-        checo::rpg::Ability{},
-        *createTestAbility(12345),
+        checo::rpg::Inventory{},
+        *createTestInventory(12345, 0, 0),
+        *createTestInventory(12346, 0, 7),
+        *createTestInventory(12347, 7, 0),
+        *createTestInventory(12349, 22, 33),
+        *createTestInventory(12350, 33, 22),
     }));
 
 } // namespace checo::rpg::testing

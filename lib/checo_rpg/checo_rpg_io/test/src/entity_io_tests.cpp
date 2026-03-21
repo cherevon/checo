@@ -56,7 +56,7 @@ TEST_P(EntityIoTest, BinaryReadWrite)
 INSTANTIATE_TEST_SUITE_P(EntityCases, EntityIoTest,
     ::testing::ValuesIn({
         checo::rpg::Entity{},
-        *checo::rpg::createTestEntity(),
+        *createTestEntity(12345),
     }));
 
 } // namespace checo::rpg::testing

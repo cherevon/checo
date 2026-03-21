@@ -25,7 +25,7 @@
 #include "checo/rpg/entity_test_support.h"
 #include "test_support.h"
 
-namespace checo::rpg
+namespace checo::rpg::testing
 {
 
 static constexpr const char *ENTITY_TYPE = "Entity";
@@ -36,14 +36,14 @@ bool deepEqual(const Entity &left, const Entity &right)
            left.m_Description == right.m_Description;
 }
 
-std::shared_ptr<Entity> createTestEntity()
+std::shared_ptr<Entity> createTestEntity(const UniqueId &id)
 {
     auto result = std::make_shared<Entity>();
-    result->m_Id = getNextTestEntityId();
+    result->m_Id = id;
     result->m_Category = createTestCategory(ENTITY_TYPE, result->m_Id);
     result->m_Name = createTestName(ENTITY_TYPE, result->m_Id);
     result->m_Description = createTestDescription(ENTITY_TYPE, result->m_Id);
     return result;
 }
 
-} // namespace checo::rpg
+} // namespace checo::rpg::testing

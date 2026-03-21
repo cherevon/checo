@@ -30,12 +30,12 @@
 
 #include <memory>
 
-namespace checo::rpg
+namespace checo::rpg::testing
 {
 
 CHECO_RPG_TEST_SUPPORT_EXPORT bool deepEqual(const Item &left, const Item &right);
 
-CHECO_RPG_TEST_SUPPORT_EXPORT std::shared_ptr<Item> createTestItem(const size_t abilityCount = 0,
+CHECO_RPG_TEST_SUPPORT_EXPORT std::shared_ptr<Item> createTestItem(const UniqueId &id, const size_t abilityCount = 0,
     const size_t statusEffectCount = 0);
 
-} // namespace checo::rpg
+} // namespace checo::rpg::testing

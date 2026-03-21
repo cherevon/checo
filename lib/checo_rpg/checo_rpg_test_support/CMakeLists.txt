@@ -8,7 +8,9 @@ include(GenerateExportHeader)
 # Project targets
 add_library(${PROJECT_NAME}
     "src/ability_test_support.cpp"
+    "src/character_test_support.cpp"
     "src/currency_test_support.cpp"
+    "src/inventory_test_support.cpp"
     "src/item_test_support.cpp"
     "src/stat_test_support.cpp"
     "src/status_effect_test_support.cpp"

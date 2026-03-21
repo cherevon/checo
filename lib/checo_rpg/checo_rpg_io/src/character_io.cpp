@@ -75,7 +75,9 @@ void readBinary(std::istream &inStream, Character &data, const StatReader &readS
     checo::readBinary(inStream, data.m_Stats, readStatFuncWrapper);
 
     // Read inventory
-    data.m_Inventory = readInventoryFunc(inStream);
+    bool inventoryExists{false};
+    checo::readBinary(inStream, inventoryExists);
+    data.m_Inventory = inventoryExists ? readInventoryFunc(inStream) : nullptr;
 
     // Read abilities
     const auto readAbilityFuncWrapper = [&](std::istream &stream, std::shared_ptr<Ability> &ability) {
@@ -104,7 +106,11 @@ void writeBinary(std::ostream &outStream, const Character &data, const StatWrite
     checo::writeBinary(outStream, data.m_Stats, writeStatFuncWrapper);
 
     // Write inventory
-    writeInventoryFunc(outStream, data.m_Inventory);
+    const bool inventoryExists = (data.m_Inventory != nullptr);
+    checo::writeBinary(outStream, inventoryExists);
+    if (inventoryExists) {
+        writeInventoryFunc(outStream, data.m_Inventory);
+    }
 
     // Write abilities
     const auto writeAbilityFuncWrapper = [&](std::ostream &stream, const std::shared_ptr<Ability> &ability) {

@@ -22,8 +22,10 @@
  * SOFTWARE.
  */
 
-#include "checo/rpg/ability_io.h"
-#include "checo/rpg/ability_test_support.h"
+#include "test_support.h"
+
+#include "checo/rpg/character_io.h"
+#include "checo/rpg/character_test_support.h"
 
 #include <gtest/gtest.h>
 
@@ -32,31 +34,40 @@
 namespace checo::rpg::testing
 {
 
-class AbilityIoTest : public ::testing::TestWithParam<checo::rpg::Ability>
+class CharacterIoTest : public ::testing::TestWithParam<checo::rpg::Character>
 {
 };
 
-TEST_P(AbilityIoTest, BinaryReadWrite)
+TEST_P(CharacterIoTest, BinaryReadWrite)
 {
-    const checo::rpg::Ability expectedAbility = GetParam();
+    const checo::rpg::Character expectedCharacter = GetParam();
 
-    // Write expected ability to a binary stream
+    // Write expected character to a binary stream
     std::stringstream stream(std::ios::in | std::ios::out | std::ios::binary);
-    checo::rpg::writeBinary(stream, expectedAbility);
+    checo::rpg::writeBinary(stream, expectedCharacter, writeTestStat, writeTestInventory, writeTestAbility,
+        writeTestStatusEffect);
 
-    // Read ability back from the stream
+    // Read character back from the stream
     stream.seekg(0);
-    checo::rpg::Ability readAbility{};
-    checo::rpg::readBinary(stream, readAbility);
+    checo::rpg::Character readCharacter{};
+    checo::rpg::readBinary(stream, readCharacter, readTestStat, readTestInventory, readTestAbility,
+        readTestStatusEffect);
 
-    // Verify that the read ability matches the expected one
-    ASSERT_TRUE(deepEqual(expectedAbility, readAbility));
+    // Verify that the read character matches the expected one
+    ASSERT_TRUE(deepEqual(expectedCharacter, readCharacter));
 }
 
-INSTANTIATE_TEST_SUITE_P(AbilityCases, AbilityIoTest,
+INSTANTIATE_TEST_SUITE_P(CharacterCases, CharacterIoTest,
     ::testing::ValuesIn({
-        checo::rpg::Ability{},
-        *createTestAbility(12345),
+        checo::rpg::Character{},
+        *createTestCharacter(12345, 0, 0, 0, 0, 0),
+        *createTestCharacter(12346, 0, 0, 0, 0, 7),
+        *createTestCharacter(12347, 0, 0, 0, 7, 0),
+        *createTestCharacter(12348, 0, 0, 7, 0, 0),
+        *createTestCharacter(12349, 0, 7, 0, 0, 0),
+        *createTestCharacter(12350, 7, 0, 0, 0, 0),
+        *createTestCharacter(12351, 10, 20, 30, 40, 50),
+        *createTestCharacter(12352, 50, 40, 30, 20, 10),
     }));
 
 } // namespace checo::rpg::testing

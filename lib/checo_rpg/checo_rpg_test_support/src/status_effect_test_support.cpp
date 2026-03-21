@@ -26,7 +26,7 @@
 #include "checo/rpg/entity_test_support.h"
 #include "test_support.h"
 
-namespace checo::rpg
+namespace checo::rpg::testing
 {
 
 static constexpr const char *ENTITY_TYPE = "StatusEffect";
@@ -36,14 +36,14 @@ bool deepEqual(const StatusEffect &left, const StatusEffect &right)
     return deepEqual(static_cast<const Entity &>(left), static_cast<const Entity &>(right));
 }
 
-std::shared_ptr<StatusEffect> createTestStatusEffect()
+std::shared_ptr<StatusEffect> createTestStatusEffect(const UniqueId &id)
 {
     auto result = std::make_shared<StatusEffect>();
-    result->m_Id = getNextTestEntityId();
+    result->m_Id = id;
     result->m_Category = createTestCategory(ENTITY_TYPE, result->m_Id);
     result->m_Name = createTestName(ENTITY_TYPE, result->m_Id);
     result->m_Description = createTestDescription(ENTITY_TYPE, result->m_Id);
     return result;
 }
 
-} // namespace checo::rpg
+} // namespace checo::rpg::testing

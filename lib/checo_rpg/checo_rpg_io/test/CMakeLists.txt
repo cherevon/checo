@@ -12,11 +12,14 @@ include(GoogleTest)
 # Project targets
 add_executable(${PROJECT_NAME}
 	"src/ability_io_tests.cpp"
+	"src/character_io_tests.cpp"
 	"src/currency_io_tests.cpp"
 	"src/entity_io_tests.cpp"
+	"src/inventory_io_tests.cpp"
 	"src/item_io_tests.cpp"
 	"src/stat_io_tests.cpp"
 	"src/status_effect_io_tests.cpp"
+	"src/test_support.cpp"
 )
 
 # Link dependencies

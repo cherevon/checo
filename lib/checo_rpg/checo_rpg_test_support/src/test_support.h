@@ -26,7 +26,7 @@
 
 #include "checo/rpg/entity.h"
 
-namespace checo::rpg
+namespace checo::rpg::testing
 {
 
 UniqueId getNextTestEntityId();
@@ -35,4 +35,4 @@ std::string createTestCategory(const char *entityType, const UniqueId &entityId)
 std::string createTestName(const char *entityType, const UniqueId &entityId);
 std::string createTestDescription(const char *entityType, const UniqueId &entityId);
 
-} // namespace checo::rpg
+} // namespace checo::rpg::testing

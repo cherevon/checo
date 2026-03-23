@@ -19,6 +19,7 @@ add_subdirectory("lib/checo_rpg")
 add_subdirectory("lib/checo_trading")
 
 # Add applications listed in this repository
+add_subdirectory("app/minecraft/auto_clicker")
 add_subdirectory("app/minecraft/auto_sell")
 add_subdirectory("app/minecraft/gaia_killer")
 add_subdirectory("app/rimworld/image_to_plan")

@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.27)
 
-project("checo_io")
+project("checo_log")
 
 # Project options
-set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Include modules
@@ -11,9 +11,10 @@ include(GenerateExportHeader)
 
 # Project targets
 add_library(${PROJECT_NAME}
-	"src/string_io.cpp"
+	"src/log_base.cpp"
+	"src/log_stdout.cpp"
 )
-add_library(checo::io ALIAS ${PROJECT_NAME})
+add_library(checo::log ALIAS ${PROJECT_NAME})
 
 # Project includes
 set(PROJECT_GENERATED_INCLUDE_DIR "${PROJECT_BINARY_DIR}/include")
@@ -24,8 +25,3 @@ target_include_directories(${PROJECT_NAME}
 		${PROJECT_GENERATED_INCLUDE_DIR}
 		"include"
 )
-
-# Tests
-if (${CHECO_ENABLE_TESTS})
-	add_subdirectory("test")
-endif()

@@ -3,6 +3,10 @@ cmake_minimum_required(VERSION 3.27)
 project("checo_io_tests")
 enable_testing()
 
+# Project options
+set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 # Find dependencies
 find_package(GTest REQUIRED)
 

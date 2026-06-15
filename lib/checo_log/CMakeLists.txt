@@ -1,27 +1,26 @@
 cmake_minimum_required(VERSION 3.27)
 
-project("checo_log")
-
-# Project options
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+project("checo_log" LANGUAGES CXX)
 
 # Include modules
 include(GenerateExportHeader)
 
-# Project targets
+# Project target
 add_library(${PROJECT_NAME}
 	"src/log_base.cpp"
 	"src/log_stdout.cpp"
 )
 add_library(checo::log ALIAS ${PROJECT_NAME})
 
-# Project includes
-set(PROJECT_GENERATED_INCLUDE_DIR "${PROJECT_BINARY_DIR}/include")
-generate_export_header(${PROJECT_NAME} EXPORT_FILE_NAME "${PROJECT_GENERATED_INCLUDE_DIR}/${PROJECT_NAME}_export.h")
+# Target compile settings
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
+
+# Target includes
+set(GENERATED_INCLUDE_DIR "${PROJECT_BINARY_DIR}/generated_include")
+generate_export_header(${PROJECT_NAME} EXPORT_FILE_NAME "${GENERATED_INCLUDE_DIR}/${PROJECT_NAME}_export.h")
 
 target_include_directories(${PROJECT_NAME}
-	PUBLIC
-		${PROJECT_GENERATED_INCLUDE_DIR}
-		"include"
+    PUBLIC
+        $<BUILD_INTERFACE:${GENERATED_INCLUDE_DIR}>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )

@@ -34,10 +34,10 @@ namespace checo
 {
 
 template <typename T>
-concept SinglebyteArithmeticType = std::is_arithmetic_v<T> && sizeof(T) == 1;
+concept SinglebyteArithmeticType = (std::is_arithmetic_v<T> || std::is_enum_v<T>) && sizeof(T) == 1;
 
 template <typename T>
-concept MultibyteArithmeticType = std::is_arithmetic_v<T> && sizeof(T) > 1;
+concept MultibyteArithmeticType = (std::is_arithmetic_v<T> || std::is_enum_v<T>) && sizeof(T) > 1;
 
 template <SinglebyteArithmeticType T>
 inline void readBinary(std::istream &inStream, T &data)
@@ -59,8 +59,7 @@ void readBinary(std::istream &inStream, T &data)
     inStream.read(buffer.data(), sizeof(T));
 
     // We read the data in big-endian format, so we need to swap the bytes if the host system is little-endian
-    if constexpr (std::endian::native == std::endian::little)
-    {
+    if constexpr (std::endian::native == std::endian::little) {
         std::ranges::reverse(buffer);
     }
 
@@ -75,8 +74,7 @@ void writeBinary(std::ostream &outStream, const T &data)
     auto buffer = std::bit_cast<std::array<char, sizeof(T)>>(data);
 
     // We write the data in big-endian format, so we need to swap the bytes if the host system is little-endian
-    if constexpr (std::endian::native == std::endian::little)
-    {
+    if constexpr (std::endian::native == std::endian::little) {
         std::ranges::reverse(buffer);
     }
 

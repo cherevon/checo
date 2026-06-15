@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.27)
 
 project("checo_id" LANGUAGES CXX)
 
-# Include modules
+# Dependencies and modules
 include(GenerateExportHeader)
 
 # Project target

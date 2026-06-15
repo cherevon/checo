@@ -1,19 +1,13 @@
 cmake_minimum_required(VERSION 3.27)
 
-project("checo_io_tests")
+project("checo_io_tests" LANGUAGES CXX)
 enable_testing()
 
-# Project options
-set(CMAKE_CXX_STANDARD 23)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-# Find dependencies
+# Dependencies and modules
 find_package(GTest REQUIRED)
-
-# Include modules
 include(GoogleTest)
 
-# Project targets
+# Project target
 add_executable(${PROJECT_NAME}
 	"src/fundamental_io_tests.cpp"
 	"src/map_io_tests.cpp"
@@ -21,6 +15,9 @@ add_executable(${PROJECT_NAME}
 	"src/set_io_tests.cpp"
 	"src/string_io_tests.cpp"
 )
+
+# Target compile settings
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_23)
 
 # Link dependencies
 target_link_libraries(${PROJECT_NAME}

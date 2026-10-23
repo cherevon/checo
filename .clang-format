@@ -3,7 +3,7 @@ BasedOnStyle: LLVM
 AlignAfterOpenBracket: DontAlign
 AlignConsecutiveBitFields: Consecutive
 AllowAllArgumentsOnNextLine: false
-AllowShortFunctionsOnASingleLine: None
+AllowShortFunctionsOnASingleLine: Inline
 ColumnLimit: 120
 IndentWidth: 4
 PackConstructorInitializers: Never

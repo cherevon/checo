@@ -25,22 +25,36 @@
 #include "checo/byte_array.h"
 
 #include <cstring>
+#include <utility>
 
 namespace checo
 {
 
-ByteArray::ByteArray() noexcept = default;
-
-ByteArray::ByteArray(const char *data, uint64_t dataSize)
-    : m_IsSmall(dataSize <= MAX_SMALL_DATA_SIZE)
+ByteArray::ByteArray() noexcept
+    : m_Metadata{.m_DataSize = 0, .m_IsOnHeap = false}
 {
-    m_DataSize = dataSize;
-    if (m_IsSmall) {
-        std::memcpy(m_SmallData, data, dataSize);
-    } else {
-        m_LargeData = new char[dataSize];
-        std::memcpy(m_LargeData, data, dataSize);
+}
+
+ByteArray::ByteArray(const char fillChar, size_t dataSize)
+    : m_Metadata{.m_DataSize = 0, .m_IsOnHeap = false}
+{
+    if (dataSize == 0) {
+        return;
     }
+
+    m_Metadata.m_DataSize = dataSize;
+    m_Metadata.m_IsOnHeap = dataSize > MAX_STACK_DATA_SIZE;
+    if (m_Metadata.m_IsOnHeap) {
+        m_HeapData.m_Data = new char[m_Metadata.m_DataSize];
+        std::memset(m_HeapData.m_Data, fillChar, m_Metadata.m_DataSize);
+    } else {
+        std::memset(m_StackData, fillChar, m_Metadata.m_DataSize);
+    }
+}
+
+ByteArray::ByteArray(const char *data, size_t dataSize)
+{
+    setData(data, dataSize);
 }
 
 ByteArray::ByteArray(const ByteArray &other)
@@ -50,18 +64,8 @@ ByteArray::ByteArray(const ByteArray &other)
         return;
     }
 
-    // Clear old data
-    clear();
-
-    // Copy new data from other
-    m_IsSmall = other.m_IsSmall;
-    m_DataSize = other.m_DataSize;
-    if (m_IsSmall) {
-        std::memcpy(m_SmallData, other.m_SmallData, other.m_DataSize);
-    } else {
-        m_LargeData = new char[other.m_DataSize];
-        std::memcpy(m_LargeData, other.m_LargeData, other.m_DataSize);
-    }
+    // Copy data
+    setData(other.data(), other.size());
 }
 
 ByteArray::ByteArray(ByteArray &&other) noexcept
@@ -71,18 +75,14 @@ ByteArray::ByteArray(ByteArray &&other) noexcept
         return;
     }
 
-    // Clear old data
-    clear();
-
     // Move new data from other
-    m_IsSmall = other.m_IsSmall;
-    m_DataSize = other.m_DataSize;
-    if (m_IsSmall) {
-        std::memcpy(m_SmallData, other.m_SmallData, other.m_DataSize);
+    m_Metadata = std::move(other.m_Metadata);
+    if (m_Metadata.m_IsOnHeap) {
+        m_HeapData.m_Data = other.m_HeapData.m_Data;
+        other.m_HeapData.m_Data = nullptr;
+        other.m_Metadata.m_IsOnHeap = false;
     } else {
-        m_LargeData = other.m_LargeData;
-        other.m_LargeData = nullptr;
-        other.m_DataSize = 0;
+        std::memcpy(m_StackData, other.m_StackData, other.m_Metadata.m_DataSize);
     }
 }
 
@@ -102,14 +102,7 @@ ByteArray &ByteArray::operator=(const ByteArray &other)
     clear();
 
     // Copy new data from other
-    m_IsSmall = other.m_IsSmall;
-    m_DataSize = other.m_DataSize;
-    if (m_IsSmall) {
-        std::memcpy(m_SmallData, other.m_SmallData, other.m_DataSize);
-    } else {
-        m_LargeData = new char[other.m_DataSize];
-        std::memcpy(m_LargeData, other.m_LargeData, other.m_DataSize);
-    }
+    setData(other.data(), other.size());
 
     // Success
     return *this;
@@ -126,14 +119,13 @@ ByteArray &ByteArray::operator=(ByteArray &&other) noexcept
     clear();
 
     // Move new data from other
-    m_IsSmall = other.m_IsSmall;
-    m_DataSize = other.m_DataSize;
-    if (m_IsSmall) {
-        std::memcpy(m_SmallData, other.m_SmallData, other.m_DataSize);
+    m_Metadata = std::move(other.m_Metadata);
+    if (m_Metadata.m_IsOnHeap) {
+        m_HeapData.m_Data = other.m_HeapData.m_Data;
+        other.m_HeapData.m_Data = nullptr;
+        other.m_Metadata.m_IsOnHeap = false;
     } else {
-        m_LargeData = other.m_LargeData;
-        other.m_LargeData = nullptr;
-        other.m_DataSize = 0;
+        std::memcpy(m_StackData, other.m_StackData, other.m_Metadata.m_DataSize);
     }
 
     // Success
@@ -142,31 +134,46 @@ ByteArray &ByteArray::operator=(ByteArray &&other) noexcept
 
 bool ByteArray::operator==(const ByteArray &other) const noexcept
 {
-    if (m_IsSmall != other.m_IsSmall || m_DataSize != other.m_DataSize) {
+    if (m_Metadata.m_IsOnHeap != other.m_Metadata.m_IsOnHeap || m_Metadata.m_DataSize != other.m_Metadata.m_DataSize) {
         return false;
     }
 
-    if (m_IsSmall) {
-        return std::memcmp(m_SmallData, other.m_SmallData, m_DataSize) == 0;
+    if (m_Metadata.m_IsOnHeap) {
+        return std::memcmp(m_HeapData.m_Data, other.m_HeapData.m_Data, m_Metadata.m_DataSize) == 0;
     } else {
-        return std::memcmp(m_LargeData, other.m_LargeData, m_DataSize) == 0;
+        return std::memcmp(m_StackData, other.m_StackData, m_Metadata.m_DataSize) == 0;
     }
 }
 
-const char *ByteArray::data() const noexcept
+void ByteArray::setData(const char *data, size_t dataSize)
 {
-    return m_IsSmall ? m_SmallData : m_LargeData;
+    // Clear old data
+    clear();
+
+    // Nothing to do if the data pointer is null
+    if (!data) {
+        return;
+    }
+
+    // Set new data
+    m_Metadata.m_DataSize = dataSize;
+    m_Metadata.m_IsOnHeap = dataSize > MAX_STACK_DATA_SIZE;
+    if (m_Metadata.m_IsOnHeap) {
+        m_HeapData.m_Data = new char[m_Metadata.m_DataSize];
+        std::memcpy(m_HeapData.m_Data, data, m_Metadata.m_DataSize);
+    } else {
+        std::memcpy(m_StackData, data, m_Metadata.m_DataSize);
+    }
 }
 
 void ByteArray::clear() noexcept
 {
-    if (m_IsSmall) {
-        m_DataSize = 0;
-    } else if (m_LargeData) {
-        delete[] m_LargeData;
-        m_LargeData = nullptr;
-        m_DataSize = 0;
+    if (m_Metadata.m_IsOnHeap && m_HeapData.m_Data) {
+        delete[] m_HeapData.m_Data;
+        m_HeapData.m_Data = nullptr;
     }
+    m_Metadata.m_DataSize = 0;
+    m_Metadata.m_IsOnHeap = false;
 }
 
 } // namespace checo

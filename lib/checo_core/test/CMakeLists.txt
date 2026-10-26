@@ -10,6 +10,7 @@ include(GoogleTest)
 # Project target
 add_executable(${PROJECT_NAME}
 	"src/byte_array_tests.cpp"
+    "src/string_tests.cpp"
     "src/variant_tests.cpp"
 )
 

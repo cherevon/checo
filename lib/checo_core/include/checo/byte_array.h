@@ -26,8 +26,6 @@
 
 #include "checo_core_export.h"
 
-#include <cstdint>
-
 namespace checo
 {
 
@@ -35,7 +33,8 @@ class CHECO_CORE_EXPORT ByteArray final
 {
   public:
     ByteArray() noexcept;
-    ByteArray(const char *data, uint64_t dataSize);
+    ByteArray(const char fillChar, size_t dataSize);
+    ByteArray(const char *data, size_t dataSize);
 
     ByteArray(const ByteArray &other);
     ByteArray(ByteArray &&other) noexcept;
@@ -49,23 +48,48 @@ class CHECO_CORE_EXPORT ByteArray final
     bool operator==(const ByteArray &other) const noexcept;
 
   public:
-    inline uint64_t size() const noexcept { return m_DataSize; }
+    size_t size() const noexcept;
 
+    char *data() noexcept;
     const char *data() const noexcept;
+    void setData(const char *data, size_t dataSize);
 
     void clear() noexcept;
 
   private:
-    static constexpr uint64_t MAX_SMALL_DATA_SIZE{16};
+    struct HeapData
+    {
+        char *m_Data{nullptr};
+    };
 
-    bool m_IsSmall{true};
-    uint64_t m_DataSize{0};
+    static constexpr size_t MAX_STACK_DATA_SIZE{sizeof(HeapData)};
+
+    struct
+    {
+        size_t m_DataSize : (sizeof(size_t) * 8 - 1) = 0;
+        bool m_IsOnHeap   : 1 = false;
+    } m_Metadata;
 
     union
     {
-        char m_SmallData[MAX_SMALL_DATA_SIZE];
-        char *m_LargeData{nullptr};
+        HeapData m_HeapData;
+        char m_StackData[MAX_STACK_DATA_SIZE];
     };
 };
+
+inline size_t ByteArray::size() const noexcept
+{
+    return m_Metadata.m_DataSize;
+}
+
+inline char *ByteArray::data() noexcept
+{
+    return m_Metadata.m_IsOnHeap ? m_HeapData.m_Data : m_StackData;
+}
+
+inline const char *ByteArray::data() const noexcept
+{
+    return m_Metadata.m_IsOnHeap ? m_HeapData.m_Data : m_StackData;
+}
 
 } // namespace checo

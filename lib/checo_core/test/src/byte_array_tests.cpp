@@ -31,6 +31,8 @@
 namespace checo::testing
 {
 
+static const std::string LARGE_STRING = std::string(1000, 'x');
+
 struct ByteArrayTestCase
 {
     const char *m_Data{nullptr};
@@ -51,7 +53,7 @@ TEST_P(ByteArrayTest, StoreData)
 }
 
 INSTANTIATE_TEST_SUITE_P(DifferentSizeData, ByteArrayTest,
-    ::testing::Values(ByteArrayTestCase{nullptr, 0}, ByteArrayTestCase{"abcdefgh", 8},
-        ByteArrayTestCase{std::string(1000, 'x').c_str(), 1000}));
+    ::testing::Values(ByteArrayTestCase{nullptr, 0}, ByteArrayTestCase{"abcd", 4}, ByteArrayTestCase{"12345678", 8},
+        ByteArrayTestCase{LARGE_STRING.c_str(), LARGE_STRING.size()}));
 
 } // namespace checo::testing

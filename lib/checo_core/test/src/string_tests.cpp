@@ -58,7 +58,7 @@ TEST_P(StringTest, ComparisonOperators)
     ASSERT_EQ(str1 <= str2, stdStr1 <= stdStr2);
 }
 
-TEST_P(StringTest, CheckSize)
+TEST_P(StringTest, Size)
 {
     const auto &[stdStr1, stdStr2] = GetParam();
 
@@ -66,12 +66,22 @@ TEST_P(StringTest, CheckSize)
     ASSERT_EQ(testString.size(), stdStr1.size());
 }
 
-TEST_P(StringTest, CheckData)
+TEST_P(StringTest, Data)
 {
     const auto &[stdStr1, stdStr2] = GetParam();
 
     checo::String testString(stdStr1);
     ASSERT_EQ(std::memcmp(testString.data(), stdStr1.data(), stdStr1.size()), 0);
+}
+
+TEST_P(StringTest, Clear)
+{
+    const auto &[stdStr1, stdStr2] = GetParam();
+
+    checo::String testString(stdStr1);
+    testString.clear();
+    ASSERT_EQ(testString.size(), 0);
+    ASSERT_EQ(testString, "");
 }
 
 static const std::vector<std::string> TEST_STRINGS = {

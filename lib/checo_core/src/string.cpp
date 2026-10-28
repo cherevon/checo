@@ -57,28 +57,4 @@ String::String(String &&other) noexcept
 
 String::~String() noexcept = default;
 
-bool String::operator>(const String &other) const noexcept
-{
-    const uint64_t minSize = m_Data.size() < other.m_Data.size() ? m_Data.size() : other.m_Data.size();
-    const auto minSizeCmp = std::strncmp(m_Data.data(), other.m_Data.data(), minSize);
-    if (minSizeCmp > 0) {
-        return true;
-    } else if (minSizeCmp < 0) {
-        return false;
-    }
-    return m_Data.size() > other.m_Data.size();
-}
-
-bool String::operator<(const String &other) const noexcept
-{
-    const uint64_t minSize = m_Data.size() < other.m_Data.size() ? m_Data.size() : other.m_Data.size();
-    const auto minSizeCmp = std::strncmp(m_Data.data(), other.m_Data.data(), minSize);
-    if (minSizeCmp < 0) {
-        return true;
-    } else if (minSizeCmp > 0) {
-        return false;
-    }
-    return m_Data.size() < other.m_Data.size();
-}
-
 } // namespace checo

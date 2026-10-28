@@ -70,12 +70,20 @@ class CHECO_CORE_EXPORT String final
 
 inline String &String::operator=(const String &other)
 {
+    if (this == &other) {
+        return *this;
+    }
+
     m_Data = other.m_Data;
     return *this;
 }
 
 inline String &String::operator=(String &&other) noexcept
 {
+    if (this == &other) {
+        return *this;
+    }
+
     m_Data = std::move(other.m_Data);
     return *this;
 }
@@ -83,6 +91,16 @@ inline String &String::operator=(String &&other) noexcept
 inline bool String::operator==(const String &other) const noexcept
 {
     return m_Data == other.m_Data;
+}
+
+inline bool String::operator>(const String &other) const noexcept
+{
+    return std::string_view(*this) > std::string_view(other);
+}
+
+inline bool String::operator<(const String &other) const noexcept
+{
+    return std::string_view(*this) < std::string_view(other);
 }
 
 inline bool String::operator<=(const String &other) const noexcept

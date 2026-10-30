@@ -12,6 +12,7 @@ add_executable(${PROJECT_NAME}
 	"src/byte_array_tests.cpp"
     "src/string_tests.cpp"
     "src/variant_tests.cpp"
+    "src/vector_tests.cpp"
 )
 
 # Target compile settings

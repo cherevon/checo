@@ -8,6 +8,7 @@ include(GenerateExportHeader)
 # Project target
 add_library(${PROJECT_NAME}
     "src/byte_array.cpp"
+    "src/memory_manager.cpp"
     "src/string.cpp"
 	"src/variant.cpp"
 )

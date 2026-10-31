@@ -15,7 +15,7 @@ add_library(checo::id ALIAS ${PROJECT_NAME})
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
 
 # Target includes
-set(GENERATED_INCLUDE_DIR "${PROJECT_BINARY_DIR}/generated_include")
+set(GENERATED_INCLUDE_DIR "${CMAKE_CURRENT_BINARY_DIR}/generated_include")
 generate_export_header(${PROJECT_NAME} EXPORT_FILE_NAME "${GENERATED_INCLUDE_DIR}/${PROJECT_NAME}_export.h")
 
 target_include_directories(${PROJECT_NAME}

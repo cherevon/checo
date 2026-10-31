@@ -16,7 +16,7 @@ add_executable(${PROJECT_NAME}
 )
 
 # Target compile settings
-target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_23)
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
 
 # Link dependencies
 target_link_libraries(${PROJECT_NAME}

@@ -22,16 +22,49 @@
  * SOFTWARE.
  */
 
-#include "checo/log/log.h"
+#include "checo/log.h"
+
+#include <vector>
 
 namespace checo::log
 {
 
-Log::Log(Level lvl) noexcept
-    : m_Level(lvl)
+struct WriterEntry
 {
+    LogWriter writer{nullptr};
+    Level minLevel{Level::kTrace};
+};
+
+static std::vector<WriterEntry> m_Writers{};
+static Level m_MinLevel{Level::kCritical};
+
+void registerWriter(LogWriter writer, Level minLevel)
+{
+    if (writer) {
+        m_Writers.push_back({writer, minLevel});
+        if (minLevel < m_MinLevel) {
+            m_MinLevel = minLevel;
+        }
+    }
 }
 
-Log::~Log() = default;
+void unregisterWriter(LogWriter writer)
+{
+    std::erase_if(m_Writers, [writer](const WriterEntry &entry) { return entry.writer == writer; });
+}
+
+bool isLevelEnabled(Level lvl)
+{
+    return lvl >= m_MinLevel;
+}
+
+void write(Level lvl, const char *file, int line, const char *message)
+{
+    for (const auto &entry : m_Writers) {
+        if (lvl >= entry.minLevel && entry.writer) {
+            entry.writer(lvl, file, line, message);
+        }
+    }
+}
 
 } // namespace checo::log

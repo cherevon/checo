@@ -17,9 +17,8 @@ add_subdirectory("app/minecraft/gaia_killer")
 add_subdirectory("app/rimworld/image_to_plan")
 
 # Add libraries listed in this repository
-add_subdirectory("lib/checo_avr")
-add_subdirectory("lib/checo_core")
-add_subdirectory("lib/checo_game_engine")
+add_subdirectory("lib/checo_game/checo_game_engine")
+add_subdirectory("lib/checo_game/checo_game_rpg")
 add_subdirectory("lib/checo_id")
 add_subdirectory("lib/checo_io")
 add_subdirectory("lib/checo_log")

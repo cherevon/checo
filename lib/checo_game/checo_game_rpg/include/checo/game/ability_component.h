@@ -47,22 +47,21 @@ class AbilityComponent : public ActorComponent
   public:
     std::span<const AbilityInstance> getAbilities() const;
 
-    EntityId addAbility(const AbilityInstance &abilityInstance);
+    void addAbility(const AbilityInstance &abilityInstance);
 
-    void removeAbility(const EntityId instanceId);
-    void removeAbilitiesByDefinitionId(const EntityId definitionId);
-    void removeAbilitiesBySourceId(const EntityId sourceId);
+    void removeAbility(EntityId instanceId);
+    void removeAbilitiesByDefinitionId(EntityId definitionId);
+    void removeAbilitiesBySourceId(EntityId sourceId, EntityType sourceType);
 
-    bool hasAbility(const EntityId instanceId) const;
-    bool hasAbilityByDefinitionId(const EntityId definitionId) const;
-    bool hasAbilityBySourceId(const EntityId sourceId) const;
+    bool hasAbility(EntityId instanceId) const;
+    bool hasAbilityByDefinitionId(EntityId definitionId) const;
+    bool hasAbilityBySourceId(EntityId sourceId, EntityType sourceType) const;
 
     void clearAbilities();
 
   private:
     Actor &m_Actor;
     std::vector<AbilityInstance> m_Abilities{};
-    EntityId m_NextInstanceId{1};
 };
 
 inline AbilityComponent::AbilityComponent(Actor &actor)

@@ -32,20 +32,7 @@
 namespace checo::game
 {
 
-class StatusEffect;
-
-struct StatusEffectInstance
-{
-  public:
-    std::reference_wrapper<StatusEffect> m_Effect;
-
-    EntityId m_InstanceId{ENTITY_ID_INVALID};
-    EntityId m_DefinitionId{ENTITY_ID_INVALID};
-    EntityId m_SourceId{ENTITY_ID_INVALID};
-    EntityType m_SourceType{ENTITY_TYPE_NONE};
-
-    void *m_UserData{nullptr};
-};
+struct StatusEffectInstance;
 
 class StatusEffect
 {
@@ -61,8 +48,23 @@ class StatusEffect
     StatusEffect &operator=(StatusEffect &&other) = delete;
 
   public:
+    virtual StatusEffectInstance createInstance(EntityId definitionId) = 0;
+
     virtual void apply(Actor &target, StatusEffectInstance &instance) = 0;
     virtual void remove(Actor &target, StatusEffectInstance &instance) = 0;
+};
+
+struct StatusEffectInstance
+{
+  public:
+    std::reference_wrapper<StatusEffect> m_Effect;
+
+    EntityId m_InstanceId{ENTITY_ID_INVALID};
+    EntityId m_DefinitionId{ENTITY_ID_INVALID};
+    EntityId m_SourceId{ENTITY_ID_INVALID};
+    EntityType m_SourceType{ENTITY_TYPE_NONE};
+
+    void *m_UserData{nullptr};
 };
 
 } // namespace checo::game

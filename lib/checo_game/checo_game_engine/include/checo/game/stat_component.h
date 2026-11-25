@@ -43,7 +43,8 @@ struct StatModifier
         kPercentMult,
     };
 
-    EntityId m_SourceId{};
+    EntityId m_SourceId{ENTITY_ID_INVALID};
+    EntityType m_SourceType{ENTITY_TYPE_NONE};
     Operation m_Operation{Operation::kFlatAdd};
     float m_Value{0.0f};
 };
@@ -58,16 +59,16 @@ class StatComponent : public ActorComponent
     ~StatComponent() override = default;
 
   public:
-    void addStat(const EntityId statId, const float baseValue = 0.0f);
-    void removeStat(const EntityId statId);
+    void addStat(EntityId statId, float baseValue = 0.0f);
+    void removeStat(EntityId statId);
 
-    float getStatValue(const EntityId statId) const;
-    float getBaseStatValue(const EntityId statId) const;
-    void setBaseStatValue(const EntityId statId, const float newBase);
+    float getStatValue(EntityId statId) const;
+    float getBaseStatValue(EntityId statId) const;
+    void setBaseStatValue(EntityId statId, float newBase);
 
-    std::span<const StatModifier> getModifiers(const EntityId statId) const;
-    void addModifier(const EntityId statId, const StatModifier &modifier);
-    void removeModifiersBySourceId(const EntityId sourceId);
+    std::span<const StatModifier> getModifiers(EntityId statId) const;
+    void addModifier(EntityId statId, const StatModifier &modifier);
+    void removeModifiersBySourceId(EntityId sourceId, EntityType sourceType);
 
   private:
     struct Stat

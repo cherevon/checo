@@ -39,5 +39,6 @@ constexpr EntityType ENTITY_TYPE_ACTOR = 1;
 constexpr EntityType ENTITY_TYPE_ABILITY = 2;
 constexpr EntityType ENTITY_TYPE_STATUS_EFFECT = 3;
 constexpr EntityType ENTITY_TYPE_ITEM = 4;
+constexpr EntityType ENTITY_TYPE_TRAIT = 5;
 
 } // namespace checo::game

@@ -30,37 +30,31 @@
 namespace checo::game
 {
 
-EntityId StatusEffectComponent::addEffect(const StatusEffectInstance &effectInstance)
+void StatusEffectComponent::addEffect(const StatusEffectInstance &effectInstance)
 {
-    // Add the effect to the list and assign it a unique instance ID
     auto &newEffectInstance = m_Effects.emplace_back(effectInstance);
-    newEffectInstance.m_InstanceId = m_NextInstanceId++;
-
-    // Apply the effect to the actor
     newEffectInstance.m_Effect.get().apply(m_Actor, newEffectInstance);
-
-    // Return newly assigned instance ID
-    return newEffectInstance.m_InstanceId;
 }
 
-void StatusEffectComponent::removeEffect(const EntityId instanceId)
+void StatusEffectComponent::removeEffect(EntityId instanceId)
 {
-    // Find the effect to be removed
-    const auto effectIter = std::find_if(m_Effects.begin(), m_Effects.end(),
-        [&](const auto &effect) { return effect.m_InstanceId == instanceId; });
-    if (effectIter == m_Effects.end()) {
-        return;
+    // Take ownership of effects to be removed before erasing them (recursion safety)
+    std::vector<StatusEffectInstance> effectsToRemove;
+    std::erase_if(m_Effects, [&](auto &effect) {
+        if (effect.m_InstanceId == instanceId) {
+            effectsToRemove.push_back(std::move(effect));
+            return true;
+        }
+        return false;
+    });
+
+    // Revoke the impact of the removed effects on the actor
+    for (auto &effectInst : effectsToRemove) {
+        effectInst.m_Effect.get().remove(m_Actor, effectInst);
     }
-
-    // Take effect ownership before erasing it from the list (recursion safety)
-    auto effectToRemove = std::move(*effectIter);
-    m_Effects.erase(effectIter);
-
-    // Revoke the impact of the effect on the actor
-    effectToRemove.m_Effect.get().remove(m_Actor, effectToRemove);
 }
 
-void StatusEffectComponent::removeEffectsByDefinitionId(const EntityId definitionId)
+void StatusEffectComponent::removeEffectsByDefinitionId(EntityId definitionId)
 {
     // Take ownership of effects to be removed before erasing them (recursion safety)
     std::vector<StatusEffectInstance> effectsToRemove;
@@ -78,12 +72,12 @@ void StatusEffectComponent::removeEffectsByDefinitionId(const EntityId definitio
     }
 }
 
-void StatusEffectComponent::removeEffectsBySourceId(const EntityId sourceId)
+void StatusEffectComponent::removeEffectsBySourceId(EntityId sourceId, EntityType sourceType)
 {
     // Take ownership of effects to be removed before erasing them (recursion safety)
     std::vector<StatusEffectInstance> effectsToRemove;
     std::erase_if(m_Effects, [&](auto &effect) {
-        if (effect.m_SourceId == sourceId) {
+        if (effect.m_SourceType == sourceType && effect.m_SourceId == sourceId) {
             effectsToRemove.push_back(std::move(effect));
             return true;
         }
@@ -96,22 +90,23 @@ void StatusEffectComponent::removeEffectsBySourceId(const EntityId sourceId)
     }
 }
 
-bool StatusEffectComponent::hasEffect(const EntityId instanceId) const
+bool StatusEffectComponent::hasEffect(EntityId instanceId) const
 {
     return std::ranges::any_of(m_Effects, std::bind_front(std::equal_to{}, instanceId),
         &StatusEffectInstance::m_InstanceId);
 }
 
-bool StatusEffectComponent::hasEffectByDefinitionId(const EntityId definitionId) const
+bool StatusEffectComponent::hasEffectByDefinitionId(EntityId definitionId) const
 {
     return std::ranges::any_of(m_Effects, std::bind_front(std::equal_to{}, definitionId),
         &StatusEffectInstance::m_DefinitionId);
 }
 
-bool StatusEffectComponent::hasEffectBySourceId(const EntityId sourceId) const
+bool StatusEffectComponent::hasEffectBySourceId(EntityId sourceId, EntityType sourceType) const
 {
-    return std::ranges::any_of(m_Effects, std::bind_front(std::equal_to{}, sourceId),
-        &StatusEffectInstance::m_SourceId);
+    return std::ranges::any_of(m_Effects, [&](const StatusEffectInstance &effect) {
+        return effect.m_SourceType == sourceType && effect.m_SourceId == sourceId;
+    });
 }
 
 void StatusEffectComponent::clearEffects()

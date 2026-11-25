@@ -49,22 +49,21 @@ class StatusEffectComponent : public ActorComponent
   public:
     std::span<const StatusEffectInstance> getEffects() const;
 
-    EntityId addEffect(const StatusEffectInstance &effectInstance);
+    void addEffect(const StatusEffectInstance &effectInstance);
 
-    void removeEffect(const EntityId instanceId);
-    void removeEffectsByDefinitionId(const EntityId definitionId);
-    void removeEffectsBySourceId(const EntityId sourceId);
+    void removeEffect(EntityId instanceId);
+    void removeEffectsByDefinitionId(EntityId definitionId);
+    void removeEffectsBySourceId(EntityId sourceId, EntityType sourceType);
 
-    bool hasEffect(const EntityId instanceId) const;
-    bool hasEffectByDefinitionId(const EntityId definitionId) const;
-    bool hasEffectBySourceId(const EntityId sourceId) const;
+    bool hasEffect(EntityId instanceId) const;
+    bool hasEffectByDefinitionId(EntityId definitionId) const;
+    bool hasEffectBySourceId(EntityId sourceId, EntityType sourceType) const;
 
     void clearEffects();
 
   private:
     Actor &m_Actor;
     std::vector<StatusEffectInstance> m_Effects{};
-    EntityId m_NextInstanceId{1};
 };
 
 inline StatusEffectComponent::StatusEffectComponent(Actor &actor)

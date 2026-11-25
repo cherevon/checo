@@ -30,47 +30,44 @@
 namespace checo::game
 {
 
-EntityId AbilityComponent::addAbility(const AbilityInstance &abilityInstance)
+void AbilityComponent::addAbility(const AbilityInstance &abilityInstance)
 {
-    // Add the ability to the list and assign it a unique instance ID
-    auto &newAbilityInstance = m_Abilities.emplace_back(abilityInstance);
-    newAbilityInstance.m_InstanceId = m_NextInstanceId++;
-
-    // Return newly assigned instance ID
-    return newAbilityInstance.m_InstanceId;
+    m_Abilities.push_back(abilityInstance);
 }
 
-void AbilityComponent::removeAbility(const EntityId instanceId)
+void AbilityComponent::removeAbility(EntityId instanceId)
 {
-    // Find the ability to be removed
     std::erase_if(m_Abilities, [&](const auto &ability) { return ability.m_InstanceId == instanceId; });
 }
 
-void AbilityComponent::removeAbilitiesByDefinitionId(const EntityId definitionId)
+void AbilityComponent::removeAbilitiesByDefinitionId(EntityId definitionId)
 {
     std::erase_if(m_Abilities, [&](const auto &ability) { return ability.m_DefinitionId == definitionId; });
 }
 
-void AbilityComponent::removeAbilitiesBySourceId(const EntityId sourceId)
+void AbilityComponent::removeAbilitiesBySourceId(EntityId sourceId, EntityType sourceType)
 {
-    std::erase_if(m_Abilities, [&](const auto &ability) { return ability.m_SourceId == sourceId; });
+    std::erase_if(m_Abilities,
+        [&](const auto &ability) { return ability.m_SourceType == sourceType && ability.m_SourceId == sourceId; });
 }
 
-bool AbilityComponent::hasAbility(const EntityId instanceId) const
+bool AbilityComponent::hasAbility(EntityId instanceId) const
 {
     return std::ranges::any_of(m_Abilities, std::bind_front(std::equal_to{}, instanceId),
         &AbilityInstance::m_InstanceId);
 }
 
-bool AbilityComponent::hasAbilityByDefinitionId(const EntityId definitionId) const
+bool AbilityComponent::hasAbilityByDefinitionId(EntityId definitionId) const
 {
     return std::ranges::any_of(m_Abilities, std::bind_front(std::equal_to{}, definitionId),
         &AbilityInstance::m_DefinitionId);
 }
 
-bool AbilityComponent::hasAbilityBySourceId(const EntityId sourceId) const
+bool AbilityComponent::hasAbilityBySourceId(EntityId sourceId, EntityType sourceType) const
 {
-    return std::ranges::any_of(m_Abilities, std::bind_front(std::equal_to{}, sourceId), &AbilityInstance::m_SourceId);
+    return std::ranges::any_of(m_Abilities, [&](const AbilityInstance &ability) {
+        return ability.m_SourceType == sourceType && ability.m_SourceId == sourceId;
+    });
 }
 
 void AbilityComponent::clearAbilities()

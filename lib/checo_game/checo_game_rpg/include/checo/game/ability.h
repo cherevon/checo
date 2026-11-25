@@ -32,20 +32,7 @@
 namespace checo::game
 {
 
-class Ability;
-
-struct AbilityInstance
-{
-  public:
-    std::reference_wrapper<Ability> m_Ability;
-
-    EntityId m_InstanceId{ENTITY_ID_INVALID};
-    EntityId m_DefinitionId{ENTITY_ID_INVALID};
-    EntityId m_SourceId{ENTITY_ID_INVALID};
-    EntityType m_SourceType{ENTITY_TYPE_NONE};
-
-    void *m_UserData{nullptr};
-};
+struct AbilityInstance;
 
 class Ability
 {
@@ -61,7 +48,22 @@ class Ability
     Ability &operator=(Ability &&other) = delete;
 
   public:
+    virtual AbilityInstance createInstance(EntityId definitionId) = 0;
+
     virtual void cast(Actor &source, Actor &target, AbilityInstance &instance) = 0;
+};
+
+struct AbilityInstance
+{
+  public:
+    std::reference_wrapper<Ability> m_Ability;
+
+    EntityId m_InstanceId{ENTITY_ID_INVALID};
+    EntityId m_DefinitionId{ENTITY_ID_INVALID};
+    EntityId m_SourceId{ENTITY_ID_INVALID};
+    EntityType m_SourceType{ENTITY_TYPE_NONE};
+
+    void *m_UserData{nullptr};
 };
 
 } // namespace checo::game

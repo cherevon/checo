@@ -27,7 +27,7 @@
 namespace checo::game
 {
 
-void StatComponent::addStat(const EntityId statId, const float baseValue)
+void StatComponent::addStat(EntityId statId, float baseValue)
 {
     auto statIter = m_Stats.find(statId);
     if (statIter == m_Stats.end()) {
@@ -41,12 +41,12 @@ void StatComponent::addStat(const EntityId statId, const float baseValue)
     }
 }
 
-void StatComponent::removeStat(const EntityId statId)
+void StatComponent::removeStat(EntityId statId)
 {
     m_Stats.erase(statId);
 }
 
-float StatComponent::getStatValue(const EntityId statId) const
+float StatComponent::getStatValue(EntityId statId) const
 {
     auto statIter = m_Stats.find(statId);
     if (statIter == m_Stats.end()) {
@@ -55,7 +55,7 @@ float StatComponent::getStatValue(const EntityId statId) const
     return statIter->second.m_CurrentValue;
 }
 
-float StatComponent::getBaseStatValue(const EntityId statId) const
+float StatComponent::getBaseStatValue(EntityId statId) const
 {
     const auto statIter = m_Stats.find(statId);
     if (statIter == m_Stats.end()) {
@@ -65,7 +65,7 @@ float StatComponent::getBaseStatValue(const EntityId statId) const
     return statIter->second.m_BaseValue;
 }
 
-void StatComponent::setBaseStatValue(const EntityId statId, const float newBase)
+void StatComponent::setBaseStatValue(EntityId statId, float newBase)
 {
     auto statIter = m_Stats.find(statId);
     if (statIter == m_Stats.end() || statIter->second.m_BaseValue == newBase) {
@@ -76,7 +76,7 @@ void StatComponent::setBaseStatValue(const EntityId statId, const float newBase)
     calculateStat(statIter->second);
 }
 
-std::span<const StatModifier> StatComponent::getModifiers(const EntityId statId) const
+std::span<const StatModifier> StatComponent::getModifiers(EntityId statId) const
 {
     const auto statIter = m_Stats.find(statId);
     if (statIter == m_Stats.end()) {
@@ -86,7 +86,7 @@ std::span<const StatModifier> StatComponent::getModifiers(const EntityId statId)
     return statIter->second.m_Modifiers;
 }
 
-void StatComponent::addModifier(const EntityId statId, const StatModifier &modifier)
+void StatComponent::addModifier(EntityId statId, const StatModifier &modifier)
 {
     auto statIter = m_Stats.find(statId);
     if (statIter == m_Stats.end()) {
@@ -97,11 +97,11 @@ void StatComponent::addModifier(const EntityId statId, const StatModifier &modif
     calculateStat(statIter->second);
 }
 
-void StatComponent::removeModifiersBySourceId(const EntityId sourceId)
+void StatComponent::removeModifiersBySourceId(EntityId sourceId, EntityType sourceType)
 {
     for (auto [statId, stat] : m_Stats) {
-        const auto delCount =
-            std::erase_if(stat.m_Modifiers, [&](const StatModifier &mod) { return mod.m_SourceId == sourceId; });
+        const auto delCount = std::erase_if(stat.m_Modifiers,
+            [&](const StatModifier &mod) { return mod.m_SourceType == sourceType && mod.m_SourceId == sourceId; });
         if (delCount > 0) {
             calculateStat(stat);
         }
